@@ -14,21 +14,30 @@ local dpi   = require("beautiful.xresources").apply_dpi
 local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
+local function random_wallpaper(s)
+    awful.spawn.with_shell("bash " .. os.getenv("HOME") .. "/bin/randwall")
+end
+
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-dark"
-theme.wallpaper                                 = theme.dir .. "/wall.png"
-theme.font                                      = "Terminus 9"
-theme.fg_normal                                 = "#DDDDFF"
-theme.fg_focus                                  = "#EA6F81"
-theme.fg_urgent                                 = "#CC9393"
-theme.bg_normal                                 = "#1A1A1A"
-theme.bg_focus                                  = "#313131"
-theme.bg_urgent                                 = "#1A1A1A"
+theme.wallpaper                                 = random_wallpaper
+-- theme.wallpaper                                 = theme.dir .. "/wall.png"
+-- theme.font                                      = "Terminus 9"
+theme.font                                      = "FiraCode Nerd Font 9"
+-- theme.font                                      = "SauceCodePro Nerd Font 9"
+theme.opacity                                   = "CC"
+theme.fg_normal                                 = "#C0C5CE"
+theme.fg_focus                                  = "#EDF3FE"
+theme.fg_urgent                                 = "#ec5f67"
+theme.bg_normal                                 = "#1B2B35"
+theme.bg_focus                                  = "#2B3B45" .. theme.opacity
+theme.bg_urgent                                 = theme.bg_normal
 theme.border_width                              = dpi(1)
-theme.border_normal                             = "#3F3F3F"
-theme.border_focus                              = "#7F7F7F"
-theme.border_marked                             = "#CC9393"
-theme.tasklist_bg_focus                         = "#1A1A1A"
+theme.border_normal                             = theme.bg_normal
+theme.border_focus                              = theme.fg_normal
+theme.border_marked                             = "#ec5f67"
+theme.tasklist_bg_focus                         = theme.bg_focus
+theme.tasklist_bg_normal                        = theme.bg_normal .. "00" -- full transparency
 theme.titlebar_bg_focus                         = theme.bg_focus
 theme.titlebar_bg_normal                        = theme.bg_normal
 theme.titlebar_fg_focus                         = theme.fg_focus
@@ -49,6 +58,7 @@ theme.layout_max                                = theme.dir .. "/icons/max.png"
 theme.layout_fullscreen                         = theme.dir .. "/icons/fullscreen.png"
 theme.layout_magnifier                          = theme.dir .. "/icons/magnifier.png"
 theme.layout_floating                           = theme.dir .. "/icons/floating.png"
+theme.layout_centerwork                         = theme.dir .. "/icons/centerwork.png"
 theme.widget_ac                                 = theme.dir .. "/icons/ac.png"
 theme.widget_battery                            = theme.dir .. "/icons/battery.png"
 theme.widget_battery_low                        = theme.dir .. "/icons/battery_low.png"
@@ -68,7 +78,7 @@ theme.widget_mail                               = theme.dir .. "/icons/mail.png"
 theme.widget_mail_on                            = theme.dir .. "/icons/mail_on.png"
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
-theme.useless_gap                               = dpi(0)
+theme.useless_gap                               = dpi(3)
 theme.titlebar_close_button_focus               = theme.dir .. "/icons/titlebar/close_focus.png"
 theme.titlebar_close_button_normal              = theme.dir .. "/icons/titlebar/close_normal.png"
 theme.titlebar_ontop_button_focus_active        = theme.dir .. "/icons/titlebar/ontop_focus_active.png"
@@ -105,8 +115,9 @@ local clock = awful.widget.watch(
 -- Calendar
 theme.cal = lain.widget.cal({
     attach_to = { clock },
+    followtag = true,
     notification_preset = {
-        font = "Terminus 10",
+        font = theme.font,
         fg   = theme.fg_normal,
         bg   = theme.bg_normal
     }
@@ -170,39 +181,53 @@ theme.mpd = lain.widget.mpd({
 })
 
 -- MEM
-local memicon = wibox.widget.imagebox(theme.widget_mem)
+-- local memicon = wibox.widget.imagebox(theme.widget_mem)
 local mem = lain.widget.mem({
     settings = function()
-        widget:set_markup(markup.font(theme.font, " " .. mem_now.used .. "MB "))
+        widget:set_markup(markup.font(theme.font, "  " .. mem_now.used .. "MB "))
     end
 })
 
 -- CPU
-local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
+-- local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu({
     settings = function()
-        widget:set_markup(markup.font(theme.font, " " .. cpu_now.usage .. "% "))
+        widget:set_markup(markup.font(theme.font, "  " .. cpu_now.usage .. "% "))
     end
 })
 
 -- Coretemp
-local tempicon = wibox.widget.imagebox(theme.widget_temp)
+-- local tempicon = wibox.widget.imagebox(theme.widget_temp)
 local temp = lain.widget.temp({
+    tempfile = "/sys/devices/virtual/thermal/thermal_zone8/temp",
     settings = function()
-        widget:set_markup(markup.font(theme.font, " " .. coretemp_now .. "°C "))
+        widget:set_markup(markup.font(theme.font, "  " .. coretemp_now .. "糖 "))
+    end
+})
+
+-- weather
+-- city_id = 3128760
+--
+local weather = lain.widget.weather({
+    city_id = 3128760,
+    settings = function()
+        --descr = weather_now["weather"][1]["description"]:lower()
+        units = math.floor(weather_now["main"]["temp"])
+        --widget:set_markup(markup.font(theme.font, " " .. descr .. " " .. units .. "°C "))
+        widget:set_markup(markup.font(theme.font, "" .. units .. "糖 "))
     end
 })
 
 -- / fs
-local fsicon = wibox.widget.imagebox(theme.widget_hdd)
---[[ commented because it needs Gio/Glib >= 2.54
-theme.fs = lain.widget.fs({
-    notification_preset = { fg = theme.fg_normal, bg = theme.bg_normal, font = "Terminus 10" },
-    settings = function()
-        widget:set_markup(markup.font(theme.font, " " .. fs_now["/"].percentage .. "% "))
-    end
-})
---]]
+-- local fsicon = wibox.widget.imagebox(theme.widget_hdd)
+-- -- commented because it needs Gio/Glib >= 2.54
+-- theme.fs = lain.widget.fs({
+--     notification_preset = { fg = theme.fg_normal, bg = theme.bg_normal, font = "Terminus 10" },
+--     settings = function()
+--         widget:set_markup(markup.font(theme.font, " " .. fs_now["/"].percentage .. "% "))
+--     end
+-- })
+--
 
 -- Battery
 local baticon = wibox.widget.imagebox(theme.widget_battery)
@@ -255,15 +280,15 @@ theme.volume.widget:buttons(awful.util.table.join(
 ))
 
 -- Net
-local neticon = wibox.widget.imagebox(theme.widget_net)
-local net = lain.widget.net({
-    settings = function()
-        widget:set_markup(markup.font(theme.font,
-                          markup("#7AC82E", " " .. string.format("%06.1f", net_now.received))
-                          .. " " ..
-                          markup("#46A8C3", " " .. string.format("%06.1f", net_now.sent) .. " ")))
-    end
-})
+-- local neticon = wibox.widget.imagebox(theme.widget_net)
+-- local net = lain.widget.net({
+--     settings = function()
+--         widget:set_markup(markup.font(theme.font,
+--                           markup("#7AC82E", " " .. string.format("%06.1f", net_now.received))
+--                           .. " " ..
+--                           markup("#46A8C3", " " .. string.format("%06.1f", net_now.sent) .. " ")))
+--     end
+-- })
 
 -- Separators
 local spr     = wibox.widget.textbox(' ')
@@ -302,7 +327,7 @@ function theme.at_screen_connect(s)
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(18), bg = theme.bg_normal, fg = theme.fg_normal })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(18), bg = theme.bg_normal .. theme.opacity , fg = theme.fg_normal })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -326,27 +351,31 @@ function theme.at_screen_connect(s)
             arrl_dl,
             volicon,
             theme.volume.widget,
-            arrl_ld,
-            wibox.container.background(mailicon, theme.bg_focus),
+            --arrl_ld,
+            --wibox.container.background(mailicon, theme.bg_focus),
             --wibox.container.background(theme.mail.widget, theme.bg_focus),
-            arrl_dl,
-            memicon,
-            mem.widget,
             arrl_ld,
-            wibox.container.background(cpuicon, theme.bg_focus),
-            wibox.container.background(cpu.widget, theme.bg_focus),
+            -- wibox.container.background(memicon, theme.bg_focus),
+            wibox.container.background(mem.widget, theme.bg_focus),
             arrl_dl,
-            tempicon,
-            temp.widget,
+            -- cpuicon,
+            cpu.widget,
             arrl_ld,
-            wibox.container.background(fsicon, theme.bg_focus),
-            --wibox.container.background(theme.fs.widget, theme.bg_focus),
+            -- wibox.container.background(tempicon, theme.bg_focus),
+            wibox.container.background(temp.widget, theme.bg_focus),
+            -- arrl_ld,
+            -- wibox.container.background(fsicon, theme.bg_focus),
+            -- wibox.container.background(theme.fs.widget, theme.bg_focus),
             arrl_dl,
             baticon,
             bat.widget,
             arrl_ld,
-            wibox.container.background(neticon, theme.bg_focus),
-            wibox.container.background(net.widget, theme.bg_focus),
+            -- wibox.container.background(neticon, theme.bg_focus),
+            -- wibox.container.background(net.widget, theme.bg_focus),
+            wibox.container.background(spr, theme.bg_focus),
+            wibox.container.background(weather.icon, theme.bg_focus),
+            wibox.container.background(weather.widget, theme.bg_focus),
+            -- wibox.container.background(net.widget, theme.bg_focus),
             arrl_dl,
             clock,
             spr,
