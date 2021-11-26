@@ -15,27 +15,23 @@ local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local function random_wallpaper(s)
-    -- awful.spawn.with_shell("bash " .. os.getenv("HOME") .. "/bin/randwall")
-    -- awful.spawn.easy_async("bash " .. os.getenv("HOME") .. "/bin/randwall")
     awful.spawn.once("randwall")
 end
+
+local xr_theme = require("beautiful.xresources").get_current_theme()
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-dark"
 theme.wallpaper                                 = random_wallpaper
--- theme.wallpaper                                 = theme.dir .. "/wall.png"
--- theme.font                                      = "Terminus 9"
 theme.font                                      = "FiraCode Nerd Font 13"
--- theme.font                                      = "SauceCodePro Nerd Font 9"
-theme.opacity                                   = "CC"
 theme.fg_normal                                 = "#C0C5CE"
 theme.fg_focus                                  = "#EDF3FE"
 theme.fg_urgent                                 = "#ec5f67"
-theme.bg_normal                                 = "#1B2B35" .. "FF"-- .. "FF" -- theme.opacity
-theme.bg_focus                                  = "#2B3B45" .. theme.opacity
-theme.bg_widget                                 = "#00FFFF" .. "11" -- theme.opacity -- theme.bg_normal .. theme.opacity
-theme.bg_widget_alt                             = "#FFFF00" .. "11" -- theme.bg_normal .. theme.opacity
-theme.bg_systray                                = theme.bg_normal
+theme.bg_normal                                 = "#1B2B35"
+theme.bg_focus                                  = "#2B3B45"
+theme.bg_widget                                 = "#092236"
+theme.bg_widget_alt                             = "#427ABF"
+theme.bg_systray                                = theme.bg_widget
 theme.bg_urgent                                 = theme.bg_normal
 theme.border_width                              = dpi(1)
 theme.border_normal                             = theme.bg_normal
@@ -43,12 +39,12 @@ theme.border_focus                              = theme.fg_normal
 theme.border_marked                             = "#ec5f67"
 
 theme.tasklist_bg_focus                         = theme.bg_widget_alt
-theme.tasklist_bg_normal                        = theme.bg_widget -- .. "00" -- full transparency
+theme.tasklist_bg_normal                        = theme.bg_widget
 
 theme.taglist_bg_focus                          = theme.bg_widget_alt
-theme.taglist_bg_normal                         = theme.bg_widget -- .. "00" -- full transparency
-theme.taglist_bg_occupied                       = theme.bg_widget -- .. "00" -- full transparency
-theme.taglist_bg_empty                          = theme.bg_widget -- .. "00" -- full transparency
+theme.taglist_bg_normal                         = theme.bg_widget
+theme.taglist_bg_occupied                       = theme.bg_widget
+theme.taglist_bg_empty                          = theme.bg_widget
 
 theme.titlebar_bg_focus                         = theme.bg_focus
 theme.titlebar_bg_normal                        = theme.bg_normal
@@ -114,6 +110,7 @@ local markup = lain.util.markup
 local separators = lain.util.separators
 
 local keyboardlayout = awful.widget.keyboardlayout:new()
+keyboardlayout.widget.font = theme.font
 
 -- Textclock
 local clockicon = wibox.widget.imagebox(theme.widget_clock)
@@ -287,14 +284,18 @@ theme.volume = lain.widget.alsa({
     end
 })
 theme.volume.widget:buttons(awful.util.table.join(
-                               awful.button({}, 4, function ()
-                                     awful.util.spawn("amixer set Master 1%+")
-                                     theme.volume.update()
-                               end),
-                               awful.button({}, 5, function ()
-                                     awful.util.spawn("amixer set Master 1%-")
-                                     theme.volume.update()
-                               end)
+    awful.button({}, 1, function ()
+        awful.spawn.easy_async("amixer set Master toggle",
+            function() theme.volume.update() end)
+    end),
+    awful.button({}, 4, function ()
+        awful.spawn.easy_async("amixer set Master 1%+",
+            function() theme.volume.update() end)
+    end),
+    awful.button({}, 5, function ()
+        awful.spawn.easy_async("amixer set Master 1%-",
+            function() theme.volume.update() end)
+    end)
 ))
 
 -- Net
@@ -315,12 +316,14 @@ local spr     = wibox.widget.textbox(' ')
 local arrl_dl = separators.arrow_left(theme.bg_widget_alt, theme.bg_widget)
 local arrl_ld = separators.arrow_left(theme.bg_widget, theme.bg_widget_alt)
 
-local systray = wibox.widget.systray()
-systray.opacity = 0.2
+local arrd = separators.arrow_right(theme.bg_widget_alt, "alpha")
+
+local arrl_dl_f = separators.arrow_left("alpha", theme.bg_widget)
+local arrl_ld_f = separators.arrow_left("alpha", theme.bg_widget_alt)
 
 function theme.at_screen_connect(s)
     -- Quake application
-    s.quake = lain.util.quake({ app = awful.util.terminal })
+    s.quake = lain.util.quake({ app = awful.util.terminal, argname = "--name %s" })
 
     -- If wallpaper is a function, call it with the screen
     local wallpaper = theme.wallpaper
@@ -389,7 +392,6 @@ function theme.at_screen_connect(s)
             id            = 'background_role',
             widget  = wibox.container.background
         },
-        nil,
         create_callback = function(self, c, index, objects) --luacheck: no unused args
             self:get_children_by_id('clienticon')[1].client = c
         end,
@@ -398,7 +400,7 @@ function theme.at_screen_connect(s)
 }
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(26), bg = theme.bg_normal .. theme.opacity , fg = theme.fg_normal })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(26), bg = "alpha", fg = theme.fg_normal })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -410,15 +412,23 @@ function theme.at_screen_connect(s)
             s.mypromptbox,
             wibox.container.background(spr, theme.bg_widget),
         },
-        s.mytasklist, -- Middle widget
+        {
+            -- Middle widget
+            layout = wibox.layout.fixed.horizontal,
+            s.mytasklist,
+            arrd
+        },
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
+            arrl_dl_f,
+            wibox.container.background(spr, theme.bg_widget),
             wibox.widget.systray(),
-            keyboardlayout,
-            spr,
+            wibox.container.background(spr, theme.bg_widget),
             arrl_ld,
-            wibox.container.background(mpdicon, theme.bg_focus),
-            wibox.container.background(theme.mpd.widget, theme.bg_focus),
+            wibox.container.background(keyboardlayout.widget, theme.bg_widget_alt),
+            -- arrl_ld,
+            -- wibox.container.background(mpdicon, theme.bg_focus),
+            -- wibox.container.background(theme.mpd.widget, theme.bg_focus),
             arrl_dl,
             wibox.container.background(volicon, theme.bg_widget),
             wibox.container.background(theme.volume.widget, theme.bg_widget),
