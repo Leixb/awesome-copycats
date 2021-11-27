@@ -15,28 +15,28 @@ local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local function random_wallpaper(s)
-    awful.spawn.once("randwall")
+    awful.spawn.once("randwall restore")
 end
 
-local xr_theme = require("beautiful.xresources").get_current_theme()
+local xres = require("beautiful.xresources").get_current_theme()
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-dark"
 theme.wallpaper                                 = random_wallpaper
 theme.font                                      = "FiraCode Nerd Font 13"
-theme.fg_normal                                 = "#C0C5CE"
-theme.fg_focus                                  = "#EDF3FE"
-theme.fg_urgent                                 = "#ec5f67"
-theme.bg_normal                                 = "#1B2B35"
-theme.bg_focus                                  = "#2B3B45"
-theme.bg_widget                                 = "#092236"
-theme.bg_widget_alt                             = "#427ABF"
+theme.fg_normal                                 = xres.foreground
+theme.fg_focus                                  = xres.foreground
+theme.fg_urgent                                 = xres.color3
+theme.bg_normal                                 = xres.background
+theme.bg_focus                                  = xres.background
+theme.bg_widget                                 = xres.color1
+theme.bg_widget_alt                             = xres.color2
 theme.bg_systray                                = theme.bg_widget
 theme.bg_urgent                                 = theme.bg_normal
 theme.border_width                              = dpi(1)
 theme.border_normal                             = theme.bg_normal
 theme.border_focus                              = theme.fg_normal
-theme.border_marked                             = "#ec5f67"
+theme.border_marked                             = xres.background
 
 theme.tasklist_bg_focus                         = theme.bg_widget_alt
 theme.tasklist_bg_normal                        = theme.bg_widget
