@@ -14,15 +14,15 @@ local dpi   = require("beautiful.xresources").apply_dpi
 local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
-local function random_wallpaper(s)
-    awful.spawn.once("randwall restore")
-end
+-- local function random_wallpaper(s)
+    -- awful.spawn.once("wallpaper")
+-- end
 
 local xres = require("beautiful.xresources").get_current_theme()
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-dark"
-theme.wallpaper                                 = random_wallpaper
+-- theme.wallpaper                                 = random_wallpaper
 theme.font                                      = "FiraCode Nerd Font 13"
 theme.fg_normal                                 = xres.foreground
 theme.fg_focus                                  = xres.foreground
@@ -270,6 +270,7 @@ local bat = lain.widget.bat({
 local volicon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsa({
     settings = function()
+        local vol_icon
         if volume_now.status == "off" then
             volicon:set_image(theme.widget_vol_mute)
         elseif tonumber(volume_now.level) == 0 then
@@ -326,10 +327,10 @@ function theme.at_screen_connect(s)
     s.quake = lain.util.quake({ app = awful.util.terminal, argname = "--name %s" })
 
     -- If wallpaper is a function, call it with the screen
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper(s)
-    end
+    -- local wallpaper = theme.wallpaper
+    -- if type(wallpaper) == "function" then
+        -- wallpaper(s)
+    -- end
     -- if type(wallpaper) == "function" then
         -- wallpaper = wallpaper(s)
     -- end
