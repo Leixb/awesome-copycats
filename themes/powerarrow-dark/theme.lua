@@ -267,27 +267,34 @@ local bat = lain.widget.bat({
 })
 
 -- ALSA volume
-local volicon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsa({
     settings = function()
-        local vol_icon
+        local vol_level = tonumber(volume_now.level)
+        local volicon
         if volume_now.status == "off" then
-            volicon:set_image(theme.widget_vol_mute)
+            volicon = "ﱝ"
         elseif tonumber(volume_now.level) == 0 then
-            volicon:set_image(theme.widget_vol_no)
+            volicon = "奄"
         elseif tonumber(volume_now.level) <= 50 then
-            volicon:set_image(theme.widget_vol_low)
+            volicon = "奔"
         else
-            volicon:set_image(theme.widget_vol)
+            volicon = "墳"
         end
 
-        widget:set_markup(markup.font(theme.font, " " .. volume_now.level .. "% "))
+        widget:set_markup(markup.font(theme.font, " " .. volicon .. " " .. volume_now.level .. "% "))
     end
 })
 theme.volume.widget:buttons(awful.util.table.join(
     awful.button({}, 1, function ()
         awful.spawn.easy_async("amixer set Master toggle",
             function() theme.volume.update() end)
+    end),
+    awful.button({}, 3, function ()
+        awful.spawn.easy_async("switch_audio",
+            function(stdout)
+                require('naughty').notify{text = stdout}
+                theme.volume.update()
+            end)
     end),
     awful.button({}, 4, function ()
         awful.spawn.easy_async("amixer set Master 1%+",
@@ -431,7 +438,6 @@ function theme.at_screen_connect(s)
             -- wibox.container.background(mpdicon, theme.bg_focus),
             -- wibox.container.background(theme.mpd.widget, theme.bg_focus),
             arrl_dl,
-            wibox.container.background(volicon, theme.bg_widget),
             wibox.container.background(theme.volume.widget, theme.bg_widget),
             --arrl_ld,
             --wibox.container.background(mailicon, theme.bg_widget_alt),
