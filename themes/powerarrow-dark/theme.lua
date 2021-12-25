@@ -1,7 +1,7 @@
 --[[
 
-     Powerarrow Dark Awesome WM theme
-     github.com/lcpz
+Powerarrow Dark Awesome WM theme
+github.com/lcpz
 
 --]]
 
@@ -15,7 +15,7 @@ local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 -- local function random_wallpaper(s)
-    -- awful.spawn.once("wallpaper")
+-- awful.spawn.once("wallpaper")
 -- end
 
 local xres = require("beautiful.xresources").get_current_theme()
@@ -37,6 +37,7 @@ theme.border_width                              = dpi(1)
 theme.border_normal                             = theme.bg_normal
 theme.border_focus                              = theme.fg_normal
 theme.border_marked                             = xres.background
+theme.notification_icon_size                    = dpi(128)
 
 theme.tasklist_bg_focus                         = theme.bg_widget_alt
 theme.tasklist_bg_normal                        = theme.bg_widget
@@ -137,19 +138,19 @@ local mailicon = wibox.widget.imagebox(theme.widget_mail)
 --[[ commented because it needs to be set before use
 mailicon:buttons(my_table.join(awful.button({ }, 1, function () awful.spawn(mail) end)))
 theme.mail = lain.widget.imap({
-    timeout  = 180,
-    server   = "server",
-    mail     = "mail",
-    password = "keyring get mail",
-    settings = function()
-        if mailcount > 0 then
-            widget:set_markup(markup.font(theme.font, " " .. mailcount .. " "))
-            mailicon:set_image(theme.widget_mail_on)
-        else
-            widget:set_text("")
-            mailicon:set_image(theme.widget_mail)
-        end
-    end
+timeout  = 180,
+server   = "server",
+mail     = "mail",
+password = "keyring get mail",
+settings = function()
+if mailcount > 0 then
+widget:set_markup(markup.font(theme.font, " " .. mailcount .. " "))
+mailicon:set_image(theme.widget_mail_on)
+else
+widget:set_text("")
+mailicon:set_image(theme.widget_mail)
+end
+end
 })
 --]]
 
@@ -333,82 +334,71 @@ function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal, argname = "--name %s" })
 
-    -- If wallpaper is a function, call it with the screen
-    -- local wallpaper = theme.wallpaper
-    -- if type(wallpaper) == "function" then
-        -- wallpaper(s)
-    -- end
-    -- if type(wallpaper) == "function" then
-        -- wallpaper = wallpaper(s)
-    -- end
-    -- gears.wallpaper.maximized(wallpaper, s, true)
-
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
-    -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mylayoutbox:buttons(my_table.join(
-                           awful.button({}, 1, function () awful.layout.inc( 1) end),
-                           awful.button({}, 2, function () awful.layout.set( awful.layout.layouts[1] ) end),
-                           awful.button({}, 3, function () awful.layout.inc(-1) end),
-                           awful.button({}, 4, function () awful.layout.inc( 1) end),
-                           awful.button({}, 5, function () awful.layout.inc(-1) end)))
+        awful.button({}, 1, function () awful.layout.inc( 1) end),
+        awful.button({}, 2, function () awful.layout.set( awful.layout.layouts[1] ) end),
+        awful.button({}, 3, function () awful.layout.inc(-1) end),
+        awful.button({}, 4, function () awful.layout.inc( 1) end),
+        awful.button({}, 5, function () awful.layout.inc(-1) end)))
     -- Create a taglist widget
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
 
     -- Create a tasklist widget
     -- s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
     s.mytasklist = awful.widget.tasklist {
-    screen   = s,
-    filter   = awful.widget.tasklist.filter.currenttags,
-    buttons  = awful.util.tasklist_buttons,
-    layout   = {
-        spacing_widget = {
-            {
-                forced_width  = 5,
-                forced_height = 24,
-                thickness     = 1,
-                color         = '#777777',
-                widget        = wibox.widget.separator
+        screen   = s,
+        filter   = awful.widget.tasklist.filter.currenttags,
+        buttons  = awful.util.tasklist_buttons,
+        layout   = {
+            spacing_widget = {
+                {
+                    forced_width  = 5,
+                    forced_height = 24,
+                    thickness     = 1,
+                    color         = '#777777',
+                    widget        = wibox.widget.separator
+                },
+                valign = 'center',
+                halign = 'center',
+                widget = wibox.container.place,
             },
-            valign = 'center',
-            halign = 'center',
-            widget = wibox.container.place,
+            spacing = 1,
+            layout  = wibox.layout.fixed.horizontal
         },
-        spacing = 1,
-        layout  = wibox.layout.fixed.horizontal
-    },
-    -- Notice that there is *NO* wibox.wibox prefix, it is a template,
-    -- not a widget instance.
-    widget_template = {
-        -- {
-        --     wibox.widget.base.make_widget(),
-        --     forced_height = 5,
-        --     id            = 'background_role',
-        --     widget        = wibox.container.background,
-        -- },
-        {
+        -- Notice that there is *NO* wibox.wibox prefix, it is a template,
+        -- not a widget instance.
+        widget_template = {
+            -- {
+            --     wibox.widget.base.make_widget(),
+            --     forced_height = 5,
+            --     id            = 'background_role',
+            --     widget        = wibox.container.background,
+            -- },
             {
-                id     = 'clienticon',
-                widget = awful.widget.clienticon,
+                {
+                    id     = 'clienticon',
+                    widget = awful.widget.clienticon,
+                },
+                -- margins = 1,
+                id            = 'background_role',
+                widget  = wibox.container.background
             },
-            -- margins = 1,
-            id            = 'background_role',
-            widget  = wibox.container.background
+            create_callback = function(self, c, index, objects) --luacheck: no unused args
+                self:get_children_by_id('clienticon')[1].client = c
+            end,
+            layout = wibox.layout.align.vertical,
         },
-        create_callback = function(self, c, index, objects) --luacheck: no unused args
-            self:get_children_by_id('clienticon')[1].client = c
-        end,
-        layout = wibox.layout.align.vertical,
-    },
-}
+    }
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(26), bg = "alpha", fg = theme.fg_normal })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(26, s), bg = "alpha", fg = theme.fg_normal })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
