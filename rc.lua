@@ -57,6 +57,7 @@ local function run_once(cmd_arr)
 end
 
 --run_once({ "picom -f -c", "unclutter -root" }) -- entries must be separated by commas
+awful.spawn.easy_async(os.getenv("HOME") .. "/.fehbg")
 
 -- This function implements the XDG autostart specification
 --[[
@@ -94,7 +95,7 @@ local cycle_prev   = true -- cycle trough all previous client or just the first 
 local editor       = os.getenv("EDITOR") or "vim"
 local gui_editor   = os.getenv("VISUAL") or "gvim"
 local browser      = os.getenv("BROWSER") or "firefox"
-local scrlocker    = os.getenv("HOME") .. "/bin/lock"
+local scrlocker    = os.getenv("SCREEN_LOCK") or "i3lock-fancy-rapid 5 5"
 local lamp         = os.getenv("HOME") .. "/.cargo/bin/yeelight-cli"
 local lamp_addr    = "192.168.1.204"
 
@@ -272,11 +273,7 @@ globalkeys = my_table.join(
         local ring_color = beautiful.bg_widget:sub(2) .. "cc"
         local ind_color = beautiful.bg_widget_alt:sub(2) .. "cc"
         naughty.notify{ text = color }
-        os.execute(scrlocker ..
-            " --text-color=" .. text_color ..
-            " --ring-color=" .. ring_color ..
-            " --keyhl-color=" .. ind_color
-        )
+        os.execute(scrlocker)
     end,
               {description = "lock screen", group = "hotkeys"}),
 
@@ -538,7 +535,7 @@ globalkeys = my_table.join(
         {description = "toggle mute", group = "hotkeys"}),
     awful.key({ modkey }, "c",
         function ()
-            os.execute("amixer -D pulse sset Capture toggle")
+            os.execute("amixer sset Capture toggle")
         end,
         {description = "toggle mute", group = "hotkeys"}),
     awful.key({ altkey, "Control" }, "m",

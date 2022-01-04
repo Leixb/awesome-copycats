@@ -18,25 +18,25 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 -- awful.spawn.once("wallpaper")
 -- end
 
-local xres = require("beautiful.xresources").get_current_theme()
+-- local xres = require("beautiful.xresources").get_current_theme()
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-dark"
--- theme.wallpaper                                 = random_wallpaper
+theme.wallpaper                                 = os.getenv("HOME") .. "/Pictures/Wallpapers/forest.jpg"
 theme.font                                      = "FiraCode Nerd Font 13"
-theme.fg_normal                                 = xres.foreground
-theme.fg_focus                                  = xres.foreground
-theme.fg_urgent                                 = xres.color3
-theme.bg_normal                                 = xres.background
-theme.bg_focus                                  = xres.background
-theme.bg_widget                                 = xres.color1
-theme.bg_widget_alt                             = xres.color2
+theme.fg_normal                                 = "#DDDDFF" -- xres.foreground
+theme.fg_focus                                  = "#9A9FF1"-- xres.foreground
+theme.fg_urgent                                 = "#EA6F81"-- xres.color3
+theme.bg_normal                                 = "#1A1A1A"-- xres.background
+theme.bg_focus                                  = "#313131"-- xres.background
+theme.bg_widget                                 = theme.bg_normal -- "#"-- xres.color1
+theme.bg_widget_alt                             = theme.bg_focus -- "#"-- xres.color2
 theme.bg_systray                                = theme.bg_widget
-theme.bg_urgent                                 = theme.bg_normal
+theme.bg_urgent                                 = "#1A1A1A" -- theme.bg_normal
 theme.border_width                              = dpi(1)
 theme.border_normal                             = theme.bg_normal
 theme.border_focus                              = theme.fg_normal
-theme.border_marked                             = xres.background
+theme.border_marked                             = "#CC9393"-- xres.background
 theme.notification_icon_size                    = dpi(128)
 
 theme.tasklist_bg_focus                         = theme.bg_widget_alt
@@ -291,7 +291,7 @@ theme.volume.widget:buttons(awful.util.table.join(
             function() theme.volume.update() end)
     end),
     awful.button({}, 3, function ()
-        awful.spawn.easy_async("switch_audio",
+        awful.spawn.easy_async("switch-audio",
             function(stdout)
                 require('naughty').notify{text = stdout}
                 theme.volume.update()
