@@ -16,6 +16,19 @@
             sumneko-lua-language-server
           ];
         };
+
+        packages.awesome-config = pkgs.stdenv.mkDerivation {
+          name = "awesome-config";
+          src = ./.;
+
+          installPhase = ''
+            mkdir -p $out
+            cp rc.lua $out
+            cp -r themes $out
+          '';
+        };
+
+        defaultPackage = self.packages.${system}.awesome-config;
       }
     );
 }
