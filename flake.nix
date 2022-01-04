@@ -11,11 +11,14 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        awesome = pkgs.awesome.override { lua = pkgs.lua5_3; };
       in
       {
         devShell = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            sumneko-lua-language-server
+          buildInputs = [
+            pkgs.sumneko-lua-language-server
+            awesome
+            pkgs.rofi
           ];
         };
       }
