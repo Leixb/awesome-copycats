@@ -7,12 +7,10 @@
   outputs = { self, nixpkgs, flake-utils }:
 
   {
-    templates.config = {
-      path = ./.;
-      description = "awesomewm configuration";
+    overlay = final: prev: {
+      awesome-config = self.packages.${prev.system}.awesome-config;
     };
 
-    defaultTemplate = self.templates.config;
   } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
