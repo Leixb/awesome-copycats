@@ -1,4 +1,6 @@
 {
+  description = "AwesomeWM master branch configutation with lain";
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/master";
     flake-utils.url = "github:numtide/flake-utils";
@@ -20,7 +22,6 @@
     overlay = final: prev: {
       awesome-config = self.packages.${prev.system}.awesome-config;
       awesome = self.packages.${prev.system}.awesome;
-      awesome-master = self.packages.${prev.system}.awesome;
       lain = self.packages.${prev.system}.lain;
     };
 
