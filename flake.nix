@@ -51,9 +51,10 @@
           src = lain;
 
           installPhase = ''
-            mkdir -p $out
-            cp *.lua $out/
-            cp -r icons layout util widget $out
+            mkdir -p $out/lib/lua/5.2/lain
+
+            cp *.lua $out/lib/lua/5.2/lain/
+            cp -r icons layout util widget $out/lib/lua/5.2/lain/
           '';
         });
 
