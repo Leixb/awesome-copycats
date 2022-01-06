@@ -2,7 +2,6 @@
   description = "AwesomeWM master branch configutation with lain";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/master";
     flake-utils.url = "github:numtide/flake-utils";
 
     awesome = {
