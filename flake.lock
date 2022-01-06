@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "awesome": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1640899424,
+        "narHash": "sha256-xlfPAyWHSXZv2WihQM2ixOXyyYZ6rOUN+1zXG32XkM8=",
+        "owner": "awesomewm",
+        "repo": "awesome",
+        "rev": "21b908bef9043c8fe80e0f98c9460991f37b3d10",
+        "type": "github"
+      },
+      "original": {
+        "owner": "awesomewm",
+        "ref": "master",
+        "repo": "awesome",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1638122382,
@@ -12,6 +29,23 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "lain": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1632570786,
+        "narHash": "sha256-NPXsgKcOGp4yDvbv/vouCpDhrEcmXsM2I1IUkDadgjw=",
+        "owner": "lcpz",
+        "repo": "lain",
+        "rev": "4933d6cb27390776a21c659020d8ba1f4a027624",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lcpz",
+        "ref": "master",
+        "repo": "lain",
         "type": "github"
       }
     },
@@ -33,7 +67,9 @@
     },
     "root": {
       "inputs": {
+        "awesome": "awesome",
         "flake-utils": "flake-utils",
+        "lain": "lain",
         "nixpkgs": "nixpkgs"
       }
     }
