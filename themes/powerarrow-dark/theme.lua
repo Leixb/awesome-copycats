@@ -228,18 +228,21 @@ local bat = lain.widget.bat({
 theme.volume = lain.widget.alsa({
     settings = function()
         local vol_level = tonumber(volume_now.level)
+        if vol_level == nil then
+            vol_level = ""
+        end
         local volicon
-        if volume_now.status == "off" then
+        if volume_now.status == "off" or vol_level == nil then
             volicon = "ﱝ"
-        elseif tonumber(volume_now.level) == 0 then
+        elseif vol_level == 0 then
             volicon = "奄"
-        elseif tonumber(volume_now.level) <= 50 then
+        elseif vol_level <= 50 then
             volicon = "奔"
         else
             volicon = "墳"
         end
 
-        widget:set_markup(markup.font(theme.font, " " .. volicon .. " " .. volume_now.level .. "% "))
+        widget:set_markup(markup.font(theme.font, " " .. volicon .. " " .. vol_level .. "% "))
     end
 })
 theme.volume.widget:buttons(awful.util.table.join(
