@@ -32,6 +32,9 @@ if awesome.startup_errors then
                      text = awesome.startup_errors })
 end
 
+-- Set mouse to center
+mouse.coords({x = 2880, y = 540}, true)
+
 -- Handle runtime errors after startup
 do
     local in_error = false
