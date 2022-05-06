@@ -707,7 +707,15 @@ for i = 1, 9 do
                         local screen = awful.screen.focused()
                         local tag = screen.tags[i]
                         if tag then
-                           tag:view_only()
+                            tag:view_only()
+                            local all_clients = screen.clients
+                            for _, c in pairs(all_clients) do
+                                if c:isvisible() and c.class == "leagueclientux.exe" then
+                                    c.minimized = true
+                                    client.focus = c
+                                    c:raise()
+                                end
+                            end
                         end
                   end,
                   descr_view),
