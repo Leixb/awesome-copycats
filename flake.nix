@@ -60,6 +60,7 @@
 
         packages.awesome = (pkgs.awesome.overrideAttrs (oldAttrs: rec {
           src = awesome;
+          patches = [];
         })).override {
           lua = pkgs.lua5_3;
           gtk3Support = true;
