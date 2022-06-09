@@ -116,7 +116,7 @@ theme.titlebar_maximized_button_normal_active   = theme.dir .. "/icons/titlebar/
 theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar/maximized_focus_inactive.png"
 theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar/maximized_normal_inactive.png"
 
-nconf.defaults.border_width = theme.border_width
+nconf.defaults.border_width = 0
 nconf.defaults.border_color = theme.border_focus
 nconf.defaults.margin = dpi(16)
 nconf.defaults.shape = function(cr, width, height)
