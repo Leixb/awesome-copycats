@@ -132,6 +132,8 @@ nconf.presets.normal.bg = theme.bg_focus
 nconf.defaults.icon_size = 64
 nconf.spacing = 8
 
+theme.notification_max_width = dpi(500)
+
 local markup = lain.util.markup
 local separators = lain.util.separators
 
