@@ -11,6 +11,8 @@ local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
 
+local naughty = require("naughty")
+local nconf = naughty.config
 local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
@@ -21,17 +23,30 @@ theme.font                                      = "FiraCode Nerd Font 13"
 theme.fg_normal                                 = "#DDDDFF"
 theme.fg_focus                                  = "#9A9FF1"
 theme.fg_urgent                                 = "#EA6F81"
-theme.bg_normal                                 = "#1A1A1A"
-theme.bg_focus                                  = "#313131"
+theme.bg_normal                                 = "#011626"
+theme.bg_focus                                  = "#213646"
 theme.bg_widget                                 = theme.bg_normal
 theme.bg_widget_alt                             = theme.bg_focus
-theme.bg_systray                                = theme.bg_widget
+theme.bg_systray                                = theme.bg_widget_alt
 theme.bg_urgent                                 = "#1A1A1A"
-theme.border_width                              = dpi(1)
+theme.border_width                              = dpi(2)
 theme.border_normal                             = theme.bg_normal
 theme.border_focus                              = theme.fg_normal
 theme.border_marked                             = "#CC9393"
 theme.notification_icon_size                    = dpi(128)
+theme.border_radius                             = dpi(10)
+
+theme.hotkeys_bg 	= theme.bg_normal
+theme.hotkeys_fg 	= theme.fg_normal
+theme.hotkeys_border_width 	= theme.border_width
+theme.hotkeys_border_color 	= theme.border_focus
+theme.hotkeys_modifiers_fg = theme.fg_focus
+theme.hotkeys_shape 	= function(cr, width, height)
+    gears.shape.rounded_rect(cr, width, height, theme.border_radius)
+end
+
+theme.hotkeys_font 	= string.gsub(theme.font, "\\d+", "") .. "Mono 11"
+theme.hotkeys_description_font 	= string.gsub(theme.font, "\\d+", "") .. " 9"
 
 theme.tasklist_bg_focus                         = theme.bg_widget_alt
 theme.tasklist_bg_normal                        = theme.bg_widget
@@ -101,6 +116,22 @@ theme.titlebar_maximized_button_normal_active   = theme.dir .. "/icons/titlebar/
 theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar/maximized_focus_inactive.png"
 theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar/maximized_normal_inactive.png"
 
+nconf.defaults.border_width = theme.border_width
+nconf.defaults.border_color = theme.border_focus
+nconf.defaults.margin = dpi(16)
+nconf.defaults.shape = function(cr, width, height)
+    gears.shape.rounded_rect(cr, width, height, theme.border_radius)
+end
+nconf.defaults.timeout = 5
+nconf.padding = dpi(16)
+nconf.presets.critical.bg = theme.bg_urgent
+nconf.presets.critical.fg = theme.fg_urgent
+nconf.presets.low.border_color = theme.border_normal
+nconf.presets.low.bg = theme.bg_normal
+nconf.presets.normal.bg = theme.bg_focus
+nconf.defaults.icon_size = 64
+nconf.spacing = 8
+
 local markup = lain.util.markup
 local separators = lain.util.separators
 
@@ -123,7 +154,12 @@ theme.cal = lain.widget.cal({
     notification_preset = {
         font = theme.font,
         fg   = theme.fg_normal,
-        bg   = theme.bg_widget
+        bg   = theme.bg_widget,
+        icon_size = dpi(128),
+        margin = dpi(10),
+        shape = function(cr, width, height)
+            gears.shape.rounded_rect(cr, width, height, theme.border_radius)
+        end
     }
 })
 
@@ -198,7 +234,12 @@ local weather = lain.widget.weather({
     notification_preset = {
         font = theme.font,
         fg   = theme.fg_normal,
-        bg   = theme.bg_widget_alt
+        bg   = theme.bg_widget_alt,
+        icon_size = dpi(128),
+        margin = dpi(10),
+        shape = function(cr, width, height)
+            gears.shape.rounded_rect(cr, width, height, theme.border_radius)
+        end
     }
 })
 
