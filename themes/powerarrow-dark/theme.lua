@@ -247,23 +247,28 @@ local weather = lain.widget.weather({
 })
 
 -- Battery
-local baticon = wibox.widget.imagebox(theme.widget_battery)
+local baticon =  wibox.widget.imagebox("#FF0000")
+
+function baticon:set_image_colored(image)
+    self:set_image(gears.color.recolor_image(image, theme.fg_normal))
+end
+
 local bat = lain.widget.bat({
     settings = function()
         if bat_now.status and bat_now.status ~= "N/A" then
             if bat_now.ac_status == 1 then
-                baticon:set_image(theme.widget_ac)
+                baticon:set_image_colored(theme.widget_ac)
             elseif not bat_now.perc and tonumber(bat_now.perc) <= 5 then
-                baticon:set_image(theme.widget_battery_empty)
+                baticon:set_image_colored(theme.widget_battery_empty)
             elseif not bat_now.perc and tonumber(bat_now.perc) <= 15 then
-                baticon:set_image(theme.widget_battery_low)
+                baticon:set_image_colored(theme.widget_battery_low)
             else
-                baticon:set_image(theme.widget_battery)
+                baticon:set_image_colored(theme.widget_battery)
             end
             widget:set_markup(markup.font(theme.font, " " .. bat_now.perc .. "% "))
         else
             widget:set_markup(markup.font(theme.font, " AC "))
-            baticon:set_image(theme.widget_ac)
+            baticon:set_image_colored(theme.widget_ac)
         end
     end
 })
