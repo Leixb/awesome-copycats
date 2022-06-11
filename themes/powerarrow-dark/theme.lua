@@ -228,10 +228,11 @@ local weather = lain.widget.weather({
     APPID = "7bb02484397fc49b0dcffe9d53744616",
     city_id = 3128760,
     settings = function()
-        --descr = weather_now["weather"][1]["description"]:lower()
+        -- descr = weather_now["weather"][1]["description"]:lower()
         units = math.floor(weather_now["main"]["temp"])
         --widget:set_markup(markup.font(theme.font, " " .. descr .. " " .. units .. "°C "))
-        widget:set_markup(markup.font(theme.font, "" .. units .. "糖 "))
+        -- widget:set_markup(markup.font(theme.font, "" .. units .. "糖 "))
+        widget:set_markup(markup.font(theme.font, "" .. units .. "<span font_size='small' font_stretch='condensed'>°C</span> "))
     end,
     notification_preset = {
         font = theme.font,
