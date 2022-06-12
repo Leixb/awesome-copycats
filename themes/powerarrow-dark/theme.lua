@@ -273,6 +273,15 @@ local bat = lain.widget.bat({
     end
 })
 
+theme.dnd = wibox.widget {
+    visible = naughty.is_suspended(),
+    widget = wibox.widget.textbox("🔕"),
+
+    update = function()
+        theme.dnd.visible = naughty.is_suspended()
+    end
+}
+
 -- ALSA volume
 theme.volume = lain.widget.alsa({
     settings = function()
@@ -302,7 +311,7 @@ theme.volume.widget:buttons(awful.util.table.join(
     awful.button({}, 3, function ()
         awful.spawn.easy_async("switch-audio",
             function(stdout)
-                require('naughty').notify{text = stdout}
+                require('naughty').notify{text = stdout:match("(.+)\n"), ignore_suspend = true}
                 theme.volume.update()
             end)
     end),
@@ -417,6 +426,7 @@ function theme.at_screen_connect(s)
             arrl_ld_f,
             wibox.container.background(spr, theme.bg_widget_alt),
             wibox.container.background(wibox.widget.systray(), theme.bg_widget_alt),
+            wibox.container.background(theme.dnd, theme.bg_widget_alt),
             wibox.container.background(spr, theme.bg_widget_alt),
             arrl_dl,
             wibox.container.background(theme.volume.widget, theme.bg_widget),

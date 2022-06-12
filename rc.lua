@@ -409,8 +409,17 @@ globalkeys = my_table.join(
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
-    awful.key({ modkey, "Control" }, "b", function() awful.spawn.easy_async("wpg -m") end,
-              {description = "random wallpaper theme"}),
+    awful.key({ modkey, "Control" }, "b", function()
+        if (naughty.is_suspended()) then
+            naughty.resume()
+            naughty.notify{text = "Notification system resumed", ignore_suspend = true}
+        else
+            naughty.notify{text = "Notification system suspended", ignore_suspend = true}
+            naughty.suspend()
+        end
+        beautiful.dnd.update()
+    end,
+              {description = "Toggle notifiactions", group = "awesome"}),
 
     awful.key({ altkey, "Shift"   }, "l",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
