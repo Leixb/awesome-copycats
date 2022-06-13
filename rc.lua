@@ -956,6 +956,13 @@ function tprint (tbl, indent)
 end
 
 
+naughty.config.notify_callback = function(args)
+    if args.app_name == "Telegram Desktop" then
+        args.actions = nil
+    end
+    return args
+end
+
 -- possible workaround for tag preservation when switching back to default screen:
 -- https://github.com/lcpz/awesome-copycats/issues/251
 -- }}}
