@@ -37,6 +37,7 @@ theme.border_focus                              = theme.fg_normal
 theme.border_marked                             = xrdb.color5 or "#CC9393"
 theme.notification_icon_size                    = dpi(128)
 theme.border_radius                             = dpi(10)
+theme.warning                                   = xrdb.color3 or "#E3D18A"
 
 theme.hotkeys_bg 	= theme.bg_normal
 theme.hotkeys_fg 	= theme.fg_normal
@@ -166,17 +167,41 @@ theme.cal = lain.widget.cal({
     }
 })
 
+local colorize = function(color, text)
+    return "<span foreground='" .. color .. "'>" .. text .. "</span>"
+end
+
+local centigrade = "<span font_size='small' font_stretch='condensed'>°C </span>"
+
+-- Return first entry in the table which is higher than the given value
+local get_first_higher = function(value, arr)
+    for _, pair in ipairs(arr) do
+        if value >= pair[1] then
+            return pair[2]
+        end
+    end
+    return nil
+end
+
 -- MEM
 local mem = lain.widget.mem({
     settings = function()
-        widget:set_markup(markup.font(theme.font, "  " .. mem_now.used .. "MB "))
+        local color = get_first_higher(tonumber(mem_now.used), {
+            {12000, theme.fg_urgent},
+            {8000, theme.fg_warning},
+        }) or theme.fg_normal
+        widget:set_markup(markup.font(theme.font, colorize(color, "  " .. mem_now.used .. "MB ")))
     end
 })
 
 -- CPU
 local cpu = lain.widget.cpu({
     settings = function()
-        widget:set_markup(markup.font(theme.font, "  " .. cpu_now.usage .. "% "))
+        local color = get_first_higher(tonumber(cpu_now.usage), {
+            {95, theme.fg_urgent},
+            {75, theme.fg_warning},
+        }) or theme.fg_normal
+        widget:set_markup(markup.font(theme.font, colorize(color, "  " .. cpu_now.usage .. "% ")))
     end
 })
 
@@ -184,7 +209,11 @@ local cpu = lain.widget.cpu({
 local temp = lain.widget.temp({
     tempfile = "/sys/devices/virtual/thermal/thermal_zone8/temp",
     settings = function()
-        widget:set_markup(markup.font(theme.font, "  " .. coretemp_now .. "糖 "))
+        local color = get_first_higher(tonumber(coretemp_now), {
+            {90.0, theme.fg_urgent},
+            {75.0, theme.fg_warning},
+        }) or theme.fg_normal
+        widget:set_markup(markup.font(theme.font, colorize(color, "  " .. coretemp_now:sub(1, -3) .. centigrade)))
     end
 })
 
@@ -194,7 +223,7 @@ local weather = lain.widget.weather({
     city_id = 3128760,
     settings = function()
         local units = math.floor(weather_now["main"]["temp"])
-        widget:set_markup(markup.font(theme.font, "" .. units .. "<span font_size='small' font_stretch='condensed'>°C</span> "))
+        widget:set_markup(markup.font(theme.font, units .. centigrade))
     end,
     notification_preset = {
         font = theme.font,
