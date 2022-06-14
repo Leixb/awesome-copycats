@@ -966,6 +966,13 @@ naughty.config.notify_callback = function(args)
     return args
 end
 
+-- Set mouse to center of primary screen
+mouse.coords{{
+    x = screen.primary.geometry.x + screen.primary.geometry.width/2,
+    y = screen.primary.geometry.y + screen.primary.geometry.height/2,
+}, silent=true}
+
+
 -- possible workaround for tag preservation when switching back to default screen:
 -- https://github.com/lcpz/awesome-copycats/issues/251
 -- }}}
