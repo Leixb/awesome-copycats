@@ -143,7 +143,6 @@ local keyboardlayout = awful.widget.keyboardlayout:new()
 keyboardlayout.widget.font = theme.font
 
 -- Textclock
-local clockicon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
     "date +'%a %d %b %R'", 60,
     function(widget, stdout)
@@ -165,42 +164,6 @@ theme.cal = lain.widget.cal({
             gears.shape.rounded_rect(cr, width, height, theme.border_radius)
         end
     }
-})
-
--- MPD
-local musicplr = awful.util.terminal .. " -title Music -e ncmpcpp"
-local mpdicon = wibox.widget.imagebox(theme.widget_music)
-mpdicon:buttons(my_table.join(
-    awful.button({ "Mod4" }, 1, function () awful.spawn(musicplr) end),
-    awful.button({ }, 1, function ()
-        os.execute("mpc prev")
-        theme.mpd.update()
-    end),
-    awful.button({ }, 2, function ()
-        os.execute("mpc toggle")
-        theme.mpd.update()
-    end),
-    awful.button({ }, 3, function ()
-        os.execute("mpc next")
-        theme.mpd.update()
-    end)))
-theme.mpd = lain.widget.mpd({
-    settings = function()
-        if mpd_now.state == "play" then
-            artist = " " .. mpd_now.artist .. " "
-            title  = mpd_now.title  .. " "
-            mpdicon:set_image(theme.widget_music_on)
-        elseif mpd_now.state == "pause" then
-            artist = " mpd "
-            title  = "paused "
-        else
-            artist = ""
-            title  = ""
-            mpdicon:set_image(theme.widget_music)
-        end
-
-        widget:set_markup(markup.font(theme.font, markup("#EA6F81", artist) .. title))
-    end
 })
 
 -- MEM
@@ -230,10 +193,7 @@ local weather = lain.widget.weather({
     APPID = "7bb02484397fc49b0dcffe9d53744616",
     city_id = 3128760,
     settings = function()
-        -- descr = weather_now["weather"][1]["description"]:lower()
-        units = math.floor(weather_now["main"]["temp"])
-        --widget:set_markup(markup.font(theme.font, " " .. descr .. " " .. units .. "°C "))
-        -- widget:set_markup(markup.font(theme.font, "" .. units .. "糖 "))
+        local units = math.floor(weather_now["main"]["temp"])
         widget:set_markup(markup.font(theme.font, "" .. units .. "<span font_size='small' font_stretch='condensed'>°C</span> "))
     end,
     notification_preset = {
@@ -275,6 +235,11 @@ local bat = lain.widget.bat({
     end
 })
 
+-- Do not disturb mode (disabled notifications)
+-- TODO:
+--  - Customize the icon
+--  - Add a tooltip
+--  - Add buttons to disable/enable the mode
 theme.dnd = wibox.widget {
     visible = naughty.is_suspended(),
     widget = wibox.widget.textbox("🔕"),
