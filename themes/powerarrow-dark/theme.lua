@@ -356,7 +356,7 @@ end
 
 function theme.at_screen_connect(s)
     -- Quake application
-    s.quake = lain.util.quake({ app = awful.util.terminal, argname = "--name %s" })
+    s.quake = lain.util.quake({ app = awful.util.terminal, argname = "--name %s", name = "quake", followtag = true })
 
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
