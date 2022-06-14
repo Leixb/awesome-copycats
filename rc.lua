@@ -960,6 +960,9 @@ naughty.config.notify_callback = function(args)
     if args.app_name == "Telegram Desktop" then
         args.actions = nil
     end
+    if args.actions ~= nil then
+        args.timeout = args.timeout * 10
+    end
     return args
 end
 
