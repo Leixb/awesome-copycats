@@ -27,7 +27,7 @@ theme.bg_normal                                 = "#011626"
 theme.bg_focus                                  = "#213646"
 theme.bg_widget                                 = theme.bg_normal
 theme.bg_widget_alt                             = theme.bg_focus
-theme.bg_systray                                = theme.bg_widget_alt
+theme.bg_systray                                = theme.bg_widget
 theme.bg_urgent                                 = "#1A1A1A"
 theme.border_width                              = dpi(2)
 theme.border_normal                             = theme.bg_normal
@@ -326,14 +326,31 @@ theme.volume.widget:buttons(awful.util.table.join(
 ))
 
 -- Separators
-local spr     = wibox.widget.textbox(' ')
-local arrl_dl = separators.arrow_left(theme.bg_widget_alt, theme.bg_widget)
-local arrl_ld = separators.arrow_left(theme.bg_widget, theme.bg_widget_alt)
-
+local spr  = wibox.widget.textbox(' ')
 local arrd = separators.arrow_right(theme.bg_widget_alt, "alpha")
 
-local arrl_dl_f = separators.arrow_left("alpha", theme.bg_widget)
-local arrl_ld_f = separators.arrow_left("alpha", theme.bg_widget_alt)
+local function build_bar(widgets, layout)
+    if layout == nil then
+        layout = wibox.layout.fixed.horizontal
+    end
+    local bar = { layout = layout }
+
+    local colors = { theme.bg_widget_alt, theme.bg_widget }
+    local arr = separators.arrow_left("alpha", colors[2])
+
+    for i, widget_list in ipairs(widgets) do
+        table.insert(bar, arr)
+        if widget_list[1] == nil then
+            widget_list = { widget_list }
+        end
+        for _, widget in ipairs(widget_list) do
+            table.insert(bar, wibox.container.background(widget, colors[(i % 2) + 1]))
+        end
+        arr = separators.arrow_left(colors[(i%2) + 1], colors[((i+1) % 2) + 1])
+    end
+
+    return bar
+end
 
 function theme.at_screen_connect(s)
     -- Quake application
@@ -421,34 +438,17 @@ function theme.at_screen_connect(s)
             s.mytasklist,
             arrd
         },
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            arrl_ld_f,
-            wibox.container.background(spr, theme.bg_widget_alt),
-            wibox.container.background(wibox.widget.systray(), theme.bg_widget_alt),
-            wibox.container.background(theme.dnd, theme.bg_widget_alt),
-            wibox.container.background(spr, theme.bg_widget_alt),
-            arrl_dl,
-            wibox.container.background(theme.volume.widget, theme.bg_widget),
-            arrl_ld,
-            wibox.container.background(mem.widget, theme.bg_widget_alt),
-            arrl_dl,
-            wibox.container.background(cpu.widget, theme.bg_widget),
-            arrl_ld,
-            wibox.container.background(temp.widget, theme.bg_widget_alt),
-            arrl_dl,
-            wibox.container.background(baticon, theme.bg_widget),
-            wibox.container.background(bat.widget, theme.bg_widget),
-            arrl_ld,
-            wibox.container.background(spr, theme.bg_widget_alt),
-            wibox.container.background(weather.icon, theme.bg_widget_alt),
-            wibox.container.background(weather.widget, theme.bg_widget_alt),
-            arrl_dl,
-            wibox.container.background(clock, theme.bg_widget),
-            wibox.container.background(spr, theme.bg_widget),
-            arrl_ld,
-            wibox.container.background(s.mylayoutbox, theme.bg_widget_alt),
-        },
+        build_bar { -- Right widgets
+            {spr, wibox.widget.systray(), theme.dnd, spr},
+            theme.volume.widget,
+            mem.widget,
+            cpu.widget,
+            temp.widget,
+            {baticon, bat.widget},
+            {spr, weather.icon, weather.widget},
+            clock,
+            {spr, s.mylayoutbox},
+        }
     }
 end
 
