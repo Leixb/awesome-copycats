@@ -30,7 +30,7 @@ theme.bg_focus                                  = xrdb.color0 or "#213646"
 theme.bg_widget                                 = theme.bg_normal
 theme.bg_widget_alt                             = theme.bg_focus
 theme.bg_systray                                = theme.bg_widget
-theme.bg_urgent                                 = xrdb.color9 or "#1A1A1A"
+theme.bg_urgent                                 = xrdb.color9 or "#EA7A7A"
 theme.border_width                              = dpi(2)
 theme.border_normal                             = theme.bg_normal
 theme.border_focus                              = theme.fg_normal
@@ -188,7 +188,7 @@ local mem = lain.widget.mem({
     settings = function()
         local mem_now = tonumber(mem_now.used)/1024.0
         local color = get_first_higher(tonumber(mem_now), {
-            {12.0, theme.fg_urgent},
+            {12.0, theme.bg_urgent},
             {8.0, theme.fg_warning},
         }) or theme.fg_normal
         widget:set_markup(markup.font(theme.font, colorize(color, string.format("  %.1f<span font_stretch='condensed'>GB </span>", mem_now))))
@@ -199,7 +199,7 @@ local mem = lain.widget.mem({
 local cpu = lain.widget.cpu({
     settings = function()
         local color = get_first_higher(tonumber(cpu_now.usage), {
-            {95, theme.fg_urgent},
+            {95, theme.bg_urgent},
             {75, theme.fg_warning},
         }) or theme.fg_normal
         widget:set_markup(markup.font(theme.font, colorize(color, "  " .. cpu_now.usage .. "% ")))
