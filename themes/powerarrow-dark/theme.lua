@@ -188,7 +188,7 @@ local mem = lain.widget.mem({
     settings = function()
         local mem_now = tonumber(mem_now.used)/1024.0
         local color = get_first_higher(tonumber(mem_now), {
-            {12.0, theme.bg_urgent},
+            {12.0, theme.fg_urgent},
             {8.0, theme.fg_warning},
         }) or theme.fg_normal
         widget:set_markup(markup.font(theme.font, colorize(color, string.format("  %.1f<span font_stretch='condensed'>GB </span>", mem_now))))
@@ -199,7 +199,7 @@ local mem = lain.widget.mem({
 local cpu = lain.widget.cpu({
     settings = function()
         local color = get_first_higher(tonumber(cpu_now.usage), {
-            {95, theme.bg_urgent},
+            {95, theme.fg_urgent},
             {75, theme.fg_warning},
         }) or theme.fg_normal
         widget:set_markup(markup.font(theme.font, colorize(color, "  " .. cpu_now.usage .. "% ")))
