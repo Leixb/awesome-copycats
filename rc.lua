@@ -99,8 +99,8 @@ local editor       = os.getenv("EDITOR") or "vim"
 local gui_editor   = os.getenv("VISUAL") or "gvim"
 local browser      = os.getenv("BROWSER") or "firefox"
 local scrlocker    = os.getenv("SCREEN_LOCK") or "i3lock-fancy-rapid 5 5"
-local lamp         = os.getenv("HOME") .. "/.cargo/bin/yeelight-cli"
-local lamp_addr    = "192.168.1.204"
+local lamp         = "hass-cli"
+local lamp_entity  = "light.desk_lamp"
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5", "6", "7", "8", "9"}
@@ -385,7 +385,7 @@ globalkeys = my_table.join(
         {description = "toggle wibox", group = "awesome"}),
 
     -- On the fly useless gaps change
-    awful.key({ altkey, "Control" }, "+", function () lain.util.useless_gaps_resize(1) end,
+    awful.key({ altkey, "Control" }, "=", function () lain.util.useless_gaps_resize(1) end,
               {description = "increment useless gaps", group = "tag"}),
     awful.key({ altkey, "Control" }, "-", function () lain.util.useless_gaps_resize(-1) end,
               {description = "decrement useless gaps", group = "tag"}),
@@ -486,45 +486,9 @@ globalkeys = my_table.join(
               {description = "next", group = "hotkeys"}),
 
     awful.key({ modkey }, "KP_Begin", function ()
-        awful.spawn({lamp, lamp_addr, "toggle"})
+        awful.spawn({lamp, "state", "toggle", lamp_entity})
         end,
               {description = "toggle desklamp", group = "hotkeys"}),
-    awful.key({ modkey }, "KP_Up", function ()
-        awful.spawn({lamp, lamp_addr, "adjust-percent", "bright", "+10"})
-        end,
-              {description = "increase desklamp brightness", group = "hotkeys"}),
-    awful.key({ modkey }, "KP_Down", function ()
-        awful.spawn({lamp, lamp_addr, "adjust-percent", "bright", "-10"})
-        end,
-              {description = "decrease desklamp brightness", group = "hotkeys"}),
-    awful.key({ modkey }, "KP_Right", function ()
-        awful.spawn({lamp, lamp_addr, "adjust-percent", "CT", "+10"})
-        end,
-              {description = "increase desklamp temp", group = "hotkeys"}),
-    awful.key({ modkey }, "KP_Left", function ()
-        awful.spawn({lamp, lamp_addr, "adjust-percent", "CT", "-10"})
-        end,
-              {description = "decrease desklamp temp", group = "hotkeys"}),
-    awful.key({ modkey }, "KP_Home", function ()
-        awful.spawn({lamp, lamp_addr, "preset", "pcmode"})
-        end,
-              {description = "desklamp scene pc", group = "hotkeys"}),
-    awful.key({ modkey }, "KP_Prior", function ()
-        awful.spawn({lamp, lamp_addr, "preset", "concentration"})
-        end,
-              {description = "desklamp scene concentration", group = "hotkeys"}),
-    awful.key({ modkey }, "KP_End", function ()
-        awful.spawn({lamp, lamp_addr, "preset", "nightreading"})
-        end,
-              {description = "desklamp scene night-reading", group = "hotkeys"}),
-    awful.key({ modkey }, "KP_Next", function ()
-        awful.spawn({lamp, lamp_addr, "preset", "reading"})
-        end,
-              {description = "desklamp scene reading", group = "hotkeys"}),
-    awful.key({ modkey }, "KP_Insert", function ()
-        awful.spawn({lamp, lamp_addr, "preset", "notify"})
-        end,
-              {description = "desklamp scene notify", group = "hotkeys"}),
 
     -- ALSA volume control
     awful.key({ altkey }, "Up",
