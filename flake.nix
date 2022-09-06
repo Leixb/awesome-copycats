@@ -61,6 +61,10 @@
         packages.awesome = (pkgs.awesome.overrideAttrs (oldAttrs: rec {
           src = awesome;
           patches = [];
+          doCheck = false;
+          cmakeFlags = oldAttrs.cmakeFlags ++ [
+            "-DGENERATE_DOC=OFF"
+          ];
         })).override {
           lua = pkgs.lua5_3;
           gtk3Support = true;

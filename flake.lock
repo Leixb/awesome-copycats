@@ -3,11 +3,11 @@
     "awesome": {
       "flake": false,
       "locked": {
-        "lastModified": 1640899424,
-        "narHash": "sha256-xlfPAyWHSXZv2WihQM2ixOXyyYZ6rOUN+1zXG32XkM8=",
+        "lastModified": 1662244284,
+        "narHash": "sha256-1jJtEIzSMwJUt8Cnu7ASPTYdyJ8865+J7UQR2JDlZX8=",
         "owner": "awesomewm",
         "repo": "awesome",
-        "rev": "21b908bef9043c8fe80e0f98c9460991f37b3d10",
+        "rev": "c8d4f878a012bc6d6d0e8e520d17a1dd9237336d",
         "type": "github"
       },
       "original": {
@@ -19,11 +19,11 @@
     },
     "flake-utils": {
       "locked": {
-        "lastModified": 1638122382,
-        "narHash": "sha256-sQzZzAbvKEqN9s0bzWuYmRaA03v40gaJ4+iL1LXjaeI=",
+        "lastModified": 1659877975,
+        "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "74f7e4319258e287b0f9cb95426c9853b282730b",
+        "rev": "c0e246b9b83f637f4681389ecabcb2681b4f3af0",
         "type": "github"
       },
       "original": {
@@ -35,11 +35,11 @@
     "lain": {
       "flake": false,
       "locked": {
-        "lastModified": 1632570786,
-        "narHash": "sha256-NPXsgKcOGp4yDvbv/vouCpDhrEcmXsM2I1IUkDadgjw=",
+        "lastModified": 1656157396,
+        "narHash": "sha256-s80jruDrLoR5lN+FkfwWf8jb7MtlIJWo7gT8TeVZgtc=",
         "owner": "lcpz",
         "repo": "lain",
-        "rev": "4933d6cb27390776a21c659020d8ba1f4a027624",
+        "rev": "c489aa63acc1364851e0e51152be3db5c75e145d",
         "type": "github"
       },
       "original": {
@@ -51,12 +51,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1641463613,
-        "narHash": "sha256-xZN9igqdZvnhSeTx8OlGby/OaYQHwgXVrBrPW0gLEh8=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "77fda7f672726e1a95c8cd200f27bccfc86c870b",
-        "type": "github"
+        "lastModified": 1662019588,
+        "narHash": "sha256-oPEjHKGGVbBXqwwL+UjsveJzghWiWV0n9ogo1X6l4cw=",
+        "path": "/nix/store/8x9s4zv7dzmwxmm8lhsxk3nf8lxlh52q-source",
+        "rev": "2da64a81275b68fdad38af669afeda43d401e94b",
+        "type": "path"
       },
       "original": {
         "id": "nixpkgs",
