@@ -207,8 +207,16 @@ local cpu = lain.widget.cpu({
 })
 
 -- Coretemp
+local tempfile = "/sys/devices/virtual/thermal/thermal_zone0/temp"
+for file in io.popen("ls /sys/devices/virtual/thermal/"):lines() do
+    local type = io.open("/sys/devices/virtual/thermal/" .. file .. "/type", "r"):read()
+    if type == "x86_pkg_temp" then
+        tempfile = "/sys/devices/virtual/thermal/" .. file .. "/temp"
+    end
+end
+
 local temp = lain.widget.temp({
-    tempfile = "/sys/devices/virtual/thermal/thermal_zone8/temp",
+    tempfile = tempfile,
     settings = function()
         local color = get_first_higher(tonumber(coretemp_now), {
             {90.0, theme.bg_urgent},
