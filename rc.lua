@@ -784,7 +784,7 @@ awful.rules.rules = {
         properties = { floating = true, placement = awful.placement.centered, above = true, ontop = true }
     },
     { rule = { class = "R_x11" },
-        properties = { floating = true, placement = awful.placement.no_overlap + awful.placement.top_right, above = true, ontop = true }
+        properties = { floating = true, focus = false, placement = awful.placement.no_overlap + awful.placement.top_right, above = true, ontop = true }
     }
 }
 -- }}}
