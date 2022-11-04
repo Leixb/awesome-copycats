@@ -51,14 +51,14 @@
           src = lain;
 
           installPhase = ''
-            mkdir -p $out/lib/lua/5.2/lain
+            mkdir -p $out/lib/lua/5.3/lain
 
-            cp *.lua $out/lib/lua/5.2/lain/
-            cp -r icons layout util widget $out/lib/lua/5.2/lain/
+            cp *.lua $out/lib/lua/5.3/lain/
+            cp -r icons layout util widget $out/lib/lua/5.3/lain/
           '';
         });
 
-        packages.awesome = (pkgs.awesome.overrideAttrs (oldAttrs: rec {
+        packages.awesome = (pkgs.awesome.overrideAttrs (oldAttrs: {
           src = awesome;
           patches = [];
           doCheck = false;
