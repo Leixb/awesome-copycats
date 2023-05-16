@@ -229,7 +229,8 @@ local temp = lain.widget.temp({
 -- weather
 local weather = lain.widget.weather({
     APPID = "7bb02484397fc49b0dcffe9d53744616",
-    city_id = 3128760,
+    lat = 41.4,
+    lon = 2.2,
     settings = function()
         local units = math.floor(weather_now["main"]["temp"])
         widget:set_markup(markup.font(theme.font, units .. centigrade))
