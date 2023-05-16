@@ -191,7 +191,7 @@ local mem = lain.widget.mem({
             {12.0, theme.bg_urgent},
             {8.0, theme.fg_warning},
         }) or theme.fg_normal
-        widget:set_markup(markup.font(theme.font, colorize(color, string.format("  %.1f<span font_stretch='condensed'>GB </span>", mem_now))))
+        widget:set_markup(markup.font(theme.font, colorize(color, string.format(" 󰍛 %.1f<span font_stretch='condensed'>GB </span>", mem_now))))
     end
 })
 
@@ -296,13 +296,13 @@ theme.volume = lain.widget.alsa({
         end
         local volicon
         if volume_now.status == "off" or vol_level == nil then
-            volicon = "ﱝ"
+            volicon = "󰖁"
         elseif vol_level == 0 then
-            volicon = "奄"
+            volicon = "󰕿"
         elseif vol_level <= 50 then
-            volicon = "奔"
+            volicon = "󰖀"
         else
-            volicon = "墳"
+            volicon = "󰕾"
         end
 
         widget:set_markup(markup.font(theme.font, " " .. volicon .. " " .. vol_level .. "% "))
