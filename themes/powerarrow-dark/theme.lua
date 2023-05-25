@@ -186,12 +186,14 @@ end
 -- MEM
 local mem = lain.widget.mem({
     settings = function()
-        local mem_now = tonumber(mem_now.used)/1024.0
-        local color = get_first_higher(tonumber(mem_now), {
-            {12.0, theme.bg_urgent},
-            {8.0, theme.fg_warning},
+        local total = tonumber(mem_now.total)
+        local color = get_first_higher(tonumber(mem_now.used), {
+            {total*0.8, theme.bg_urgent},
+            {total*0.6, theme.fg_warning},
         }) or theme.fg_normal
-        widget:set_markup(markup.font(theme.font, colorize(color, string.format(" 󰍛 %.1f<span font_stretch='condensed'>GB </span>", mem_now))))
+
+        local used_gb = tonumber(mem_now.used)/1024.0
+        widget:set_markup(markup.font(theme.font, colorize(color, string.format(" 󰍛 %.1f<span font_stretch='condensed'>GB </span>", used_gb))))
     end
 })
 
