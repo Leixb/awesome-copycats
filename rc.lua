@@ -96,10 +96,9 @@ local terminal = os.getenv("TERMINAL") or "kitty"
 local vi_focus = false -- vi-like client focus - https://github.com/lcpz/awesome-copycats/issues/275
 local cycle_prev = true -- cycle trough all previous client or just the first -- https://github.com/lcpz/awesome-copycats/issues/274
 local editor = os.getenv("EDITOR") or "vim"
-local gui_editor = os.getenv("VISUAL") or "gvim"
+local gui_editor = os.getenv("VISUAL") or "code"
 local browser = os.getenv("BROWSER") or "firefox"
 local scrlocker = os.getenv("SCREEN_LOCK") or "i3lock-fancy-rapid 5 5"
-local lamp = "hass-cli"
 local lamp_entity = "light.desk_lamp"
 
 awful.util.terminal = terminal
@@ -295,10 +294,6 @@ globalkeys = my_table.join(
 
     -- X screen locker
     awful.key({ altkey, "Control" }, "l", function()
-        local text_color = beautiful.fg_normal:sub(2) .. "cc"
-        local ring_color = beautiful.bg_widget:sub(2) .. "cc"
-        local ind_color = beautiful.bg_widget_alt:sub(2) .. "cc"
-        naughty.notify({ text = color })
         awful.spawn(scrlocker)
     end, { description = "lock screen", group = "hotkeys" }),
 
@@ -508,80 +503,63 @@ globalkeys = my_table.join(
     end, { description = "next", group = "hotkeys" }),
 
     awful.key({ modkey }, "KP_Begin", function()
-        awful.spawn.easy_async("hass-cli state toggle light.desklamp", function()
+        awful.spawn.easy_async_with_shell("hass-cli state toggle " .. lamp_entity, function(stdout, stderr, exitreason, exitcode)
             awesome.emit_signal("desklight::update")
         end)
     end, { description = "toggle desklamp", group = "hotkeys" }),
 
     awful.key({ modkey }, "KP_5", function()
-        awful.spawn.easy_async("hass-cli state toggle light.desklamp", function()
+        awful.spawn.easy_async_with_shell("hass-cli state toggle light.desk_lamp", function(stdout, stderr, exitreason, exitcode)
             awesome.emit_signal("desklight::update")
         end)
     end, { description = "toggle desklamp", group = "hotkeys" }),
 
     -- ALSA volume control
     awful.key({ altkey }, "Up", function()
-        awful.spawn(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
-        beautiful.volume.update()
+        awful.spawn.easy_async(string.format("amixer -q set %s 1%%+", beautiful.volume.channel), function()
+            awesome.emit_signal("volume::update")
+        end)
     end, { description = "volume up", group = "hotkeys" }),
+
     awful.key({ altkey }, "Down", function()
-        awful.spawn(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
-        beautiful.volume.update()
+        awful.spawn.easy_async(string.format("amixer -q set %s 1%%-", beautiful.volume.channel), function()
+            awesome.emit_signal("volume::update")
+        end)
     end, { description = "volume down", group = "hotkeys" }),
+
+    awful.key({}, "XF86AudioRaiseVolume", function()
+        awful.spawn.easy_async(string.format("amixer -q set %s 1%%+", beautiful.volume.channel), function()
+            awesome.emit_signal("volume::update")
+        end)
+    end, { description = "volume up", group = "hotkeys" }),
+
+    awful.key({}, "XF86AudioLowerVolume", function()
+        awful.spawn.easy_async(string.format("amixer -q set %s 1%%-", beautiful.volume.channel), function()
+            awesome.emit_signal("volume::update")
+        end)
+    end, { description = "volume down", group = "hotkeys" }),
+
     awful.key({}, "XF86AudioMute", function()
-        awful.spawn(
-            string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel)
+        awful.spawn.easy_async(
+            string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel),
+            function()
+                awesome.emit_signal("volume::update")
+            end
         )
-        beautiful.volume.update()
     end, { description = "toggle mute", group = "hotkeys" }),
     awful.key({ modkey }, "c", function()
         awful.spawn("amixer sset Capture toggle")
     end, { description = "toggle mute", group = "hotkeys" }),
+
     awful.key({ altkey, "Control" }, "m", function()
         awful.spawn(string.format("amixer -q set %s 100%%", beautiful.volume.channel))
-        beautiful.volume.update()
+        awesome.emit_signal("volume::update")
     end, { description = "volume 100%", group = "hotkeys" }),
+
     awful.key({ altkey, "Control" }, "0", function()
         awful.spawn(string.format("amixer -q set %s 0%%", beautiful.volume.channel))
         beautiful.volume.update()
     end, { description = "volume 0%", group = "hotkeys" }),
-    awful.key({}, "XF86AudioRaiseVolume", function()
-        awful.spawn(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
-        beautiful.volume.update()
-    end, { description = "volume up", group = "hotkeys" }),
-    awful.key({}, "XF86AudioLowerVolume", function()
-        awful.spawn(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
-        beautiful.volume.update()
-    end, { description = "volume down", group = "hotkeys" }),
-
-    -- MPD control
-    awful.key({ altkey, "Control" }, "Up", function()
-        awful.spawn("mpc toggle")
-        beautiful.mpd.update()
-    end, { description = "mpc toggle", group = "widgets" }),
-    awful.key({ altkey, "Control" }, "Down", function()
-        awful.spawn("mpc stop")
-        beautiful.mpd.update()
-    end, { description = "mpc stop", group = "widgets" }),
-    awful.key({ altkey, "Control" }, "Left", function()
-        awful.spawn("mpc prev")
-        beautiful.mpd.update()
-    end, { description = "mpc prev", group = "widgets" }),
-    awful.key({ altkey, "Control" }, "Right", function()
-        awful.spawn("mpc next")
-        beautiful.mpd.update()
-    end, { description = "mpc next", group = "widgets" }),
-    awful.key({ altkey }, "0", function()
-        local common = { text = "MPD widget ", position = "top_middle", timeout = 2 }
-        if beautiful.mpd.timer.started then
-            beautiful.mpd.timer:stop()
-            common.text = common.text .. lain.util.markup.bold("OFF")
-        else
-            beautiful.mpd.timer:start()
-            common.text = common.text .. lain.util.markup.bold("ON")
-        end
-        naughty.notify(common)
-    end, { description = "mpc on/off", group = "widgets" }),
 
     -- Copy primary to clipboard (terminals to gtk)
     awful.key({ modkey }, "c", function()
@@ -597,7 +575,7 @@ globalkeys = my_table.join(
         awful.spawn(browser)
     end, { description = "run browser", group = "launcher" }),
     awful.key({ modkey }, "a", function()
-        awful.spawn(guieditor)
+        awful.spawn(gui_editor)
     end, { description = "run gui editor", group = "launcher" }),
 
     -- Default
