@@ -467,24 +467,25 @@ globalkeys = my_table.join(
           --
     -- Media keys
     awful.key({ }, "XF86AudioPlay", function ()
-        awful.spawn.with_shell("bash " .. os.getenv("HOME") .. "/bin/mediactl play-pause")
+        awful.spawn.easy_async("playerctl play-pause")
         end,
               {description = "play/pause", group = "hotkeys"}),
     awful.key({ }, "XF86AudioPrev", function ()
-        awful.spawn.with_shell("bash " .. os.getenv("HOME") .. "/bin/mediactl prev")
+        awful.spawn.easy_async("playerctl previous")
         end,
               {description = "prev", group = "hotkeys"}),
     awful.key({ }, "XF86AudioNext", function ()
-        awful.spawn.with_shell("bash " .. os.getenv("HOME") .. "/bin/mediactl next")
-        end,
-              {description = "next", group = "hotkeys"}),
-    awful.key({ }, "XF86Tools", function ()
-        awful.spawn.with_shell("bash " .. os.getenv("HOME") .. "/bin/ytmctl open")
+        awful.spawn.easy_async("playerctl next")
         end,
               {description = "next", group = "hotkeys"}),
 
     awful.key({ modkey }, "KP_Begin", function ()
-        awful.spawn({lamp, "state", "toggle", lamp_entity})
+        awful.spawn.easy_async("hass-cli state toggle light.desklamp")
+        end,
+              {description = "toggle desklamp", group = "hotkeys"}),
+
+    awful.key({ modkey }, "KP_5", function ()
+        awful.spawn.easy_async("hass-cli state toggle light.desklamp")
         end,
               {description = "toggle desklamp", group = "hotkeys"}),
 
