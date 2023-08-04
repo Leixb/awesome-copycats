@@ -300,15 +300,9 @@ globalkeys = my_table.join(
 
     -- X screen locker
     awful.key({ altkey, "Control" }, "l", function()
-        awful.spawn.easy_async_with_shell("hass-cli --columns=STATE=state --no-headers state get " .. lamp_entity, function(stdout)
-            if stdout:match("on") then
-                awful.spawn.with_shell("hass-cli state turn_off " .. lamp_entity)
-                awful.spawn.easy_async(scrlocker .. " --nofork", function()
-                    awful.spawn.with_shell("hass-cli state turn_on " .. lamp_entity)
-                end)
-            else
-                awful.spawn(scrlocker)
-            end
+        awful.spawn.with_shell("hass-cli event fire kuro.lock --json '{}'")
+        awful.spawn.easy_async(scrlocker .. " --nofork", function()
+            awful.spawn.with_shell("hass-cli event fire kuro.unlock --json '{}'")
         end)
     end, { description = "lock screen", group = "hotkeys" }),
 
