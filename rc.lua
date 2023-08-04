@@ -267,7 +267,7 @@ root.buttons(my_table.join(
 globalkeys = my_table.join(
     -- Take a screenshot
     -- https://github.com/lcpz/dots/blob/master/bin/screenshot
-    awful.key({ altkey }, "p", function() os.execute("screenshot") end,
+    awful.key({ altkey }, "p", function() awful.spawn("screenshot") end,
               {description = "take a screenshot", group = "hotkeys"}),
 
     -- X screen locker
@@ -276,7 +276,7 @@ globalkeys = my_table.join(
         local ring_color = beautiful.bg_widget:sub(2) .. "cc"
         local ind_color = beautiful.bg_widget_alt:sub(2) .. "cc"
         naughty.notify{ text = color }
-        os.execute(scrlocker)
+        awful.spawn(scrlocker)
     end,
               {description = "lock screen", group = "hotkeys"}),
 
@@ -460,78 +460,78 @@ globalkeys = my_table.join(
               -- {description = "show weather", group = "widgets"}),
 
     -- Brightness
-    awful.key({ }, "XF86MonBrightnessUp", function () os.execute("light -A 1") end,
+    awful.key({ }, "XF86MonBrightnessUp", function () awful.spawn("light -A 1") end,
               {description = "+10%", group = "hotkeys"}),
-    awful.key({ }, "XF86MonBrightnessDown", function () os.execute("light -U 1") end,
+    awful.key({ }, "XF86MonBrightnessDown", function () awful.spawn("light -U 1") end,
               {description = "-10%", group = "hotkeys"}),
           --
     -- Media keys
     awful.key({ }, "XF86AudioPlay", function ()
-        awful.spawn.easy_async("playerctl play-pause")
+        awful.spawn.easy_async("playerctl play-pause", function () awesome.emit_signal('media::update') end)
         end,
               {description = "play/pause", group = "hotkeys"}),
     awful.key({ }, "XF86AudioPrev", function ()
-        awful.spawn.easy_async("playerctl previous")
+        awful.spawn.easy_async("playerctl previous", function () awesome.emit_signal('media::update') end)
         end,
               {description = "prev", group = "hotkeys"}),
     awful.key({ }, "XF86AudioNext", function ()
-        awful.spawn.easy_async("playerctl next")
+        awful.spawn.easy_async("playerctl next", function () awesome.emit_signal('media::update') end)
         end,
               {description = "next", group = "hotkeys"}),
 
     awful.key({ modkey }, "KP_Begin", function ()
-        awful.spawn.easy_async("hass-cli state toggle light.desklamp")
+        awful.spawn.easy_async("hass-cli state toggle light.desklamp", function () awesome.emit_signal('desklight::update') end)
         end,
               {description = "toggle desklamp", group = "hotkeys"}),
 
     awful.key({ modkey }, "KP_5", function ()
-        awful.spawn.easy_async("hass-cli state toggle light.desklamp")
+        awful.spawn.easy_async("hass-cli state toggle light.desklamp", function () awesome.emit_signal('desklight::update') end)
         end,
               {description = "toggle desklamp", group = "hotkeys"}),
 
     -- ALSA volume control
     awful.key({ altkey }, "Up",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
+            awful.spawn(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
             beautiful.volume.update()
         end,
         {description = "volume up", group = "hotkeys"}),
     awful.key({ altkey }, "Down",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
+            awful.spawn(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
             beautiful.volume.update()
         end,
         {description = "volume down", group = "hotkeys"}),
     awful.key({ }, "XF86AudioMute",
         function ()
-            os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
+            awful.spawn(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
             beautiful.volume.update()
         end,
         {description = "toggle mute", group = "hotkeys"}),
     awful.key({ modkey }, "c",
         function ()
-            os.execute("amixer sset Capture toggle")
+            awful.spawn("amixer sset Capture toggle")
         end,
         {description = "toggle mute", group = "hotkeys"}),
     awful.key({ altkey, "Control" }, "m",
         function ()
-            os.execute(string.format("amixer -q set %s 100%%", beautiful.volume.channel))
+            awful.spawn(string.format("amixer -q set %s 100%%", beautiful.volume.channel))
             beautiful.volume.update()
         end,
         {description = "volume 100%", group = "hotkeys"}),
     awful.key({ altkey, "Control" }, "0",
         function ()
-            os.execute(string.format("amixer -q set %s 0%%", beautiful.volume.channel))
+            awful.spawn(string.format("amixer -q set %s 0%%", beautiful.volume.channel))
             beautiful.volume.update()
         end,
         {description = "volume 0%", group = "hotkeys"}),
     awful.key({ }, "XF86AudioRaiseVolume", function ()
-            os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
+            awful.spawn(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
             beautiful.volume.update()
         end,
               {description = "volume up", group = "hotkeys"}),
     awful.key({ }, "XF86AudioLowerVolume", function ()
-            os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
+            awful.spawn(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
             beautiful.volume.update()
         end,
               {description = "volume down", group = "hotkeys"}),
@@ -539,25 +539,25 @@ globalkeys = my_table.join(
     -- MPD control
     awful.key({ altkey, "Control" }, "Up",
         function ()
-            os.execute("mpc toggle")
+            awful.spawn("mpc toggle")
             beautiful.mpd.update()
         end,
         {description = "mpc toggle", group = "widgets"}),
     awful.key({ altkey, "Control" }, "Down",
         function ()
-            os.execute("mpc stop")
+            awful.spawn("mpc stop")
             beautiful.mpd.update()
         end,
         {description = "mpc stop", group = "widgets"}),
     awful.key({ altkey, "Control" }, "Left",
         function ()
-            os.execute("mpc prev")
+            awful.spawn("mpc prev")
             beautiful.mpd.update()
         end,
         {description = "mpc prev", group = "widgets"}),
     awful.key({ altkey, "Control" }, "Right",
         function ()
-            os.execute("mpc next")
+            awful.spawn("mpc next")
             beautiful.mpd.update()
         end,
         {description = "mpc next", group = "widgets"}),
@@ -596,7 +596,7 @@ globalkeys = my_table.join(
     --[[ dmenu
     awful.key({ modkey }, "x", function ()
     awful.layout.suit.floating,
-            os.execute(string.format("dmenu_run -i -fn 'Monospace' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
+            awful.spawn(string.format("dmenu_run -i -fn 'Monospace' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
             beautiful.bg_normal, beautiful.fg_normal, beautiful.bg_focus, beautiful.fg_focus))
         end,
         {description = "show dmenu", group = "launcher"})
@@ -605,7 +605,7 @@ globalkeys = my_table.join(
     -- check https://github.com/DaveDavenport/rofi for more details
     -- rofi
     awful.key({ modkey }, "d", function ()
-            os.execute("rofi -show")
+            awful.spawn("rofi -show")
         end,
         {description = "show rofi", group = "launcher"}),
     --
