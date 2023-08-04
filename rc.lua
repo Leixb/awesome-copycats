@@ -243,6 +243,12 @@ local myawesomemenu = {
 -- hide menu when mouse leaves it
 --awful.util.mymainmenu.wibox:connect_signal("mouse::leave", function() awful.util.mymainmenu:hide() end)
 
+-- Update volume widget on volume change
+awesome.connect_signal(
+    "volume::update",
+    function() beautiful.volume.update() end
+)
+
 --menubar.utils.terminal = terminal -- Set the Menubar terminal for applications that require it
 -- }}}
 
@@ -294,7 +300,16 @@ globalkeys = my_table.join(
 
     -- X screen locker
     awful.key({ altkey, "Control" }, "l", function()
-        awful.spawn(scrlocker)
+        awful.spawn.easy_async_with_shell("hass-cli --columns=STATE=state --no-headers state get " .. lamp_entity, function(stdout)
+            if stdout:match("on") then
+                awful.spawn.with_shell("hass-cli state turn_off " .. lamp_entity)
+                awful.spawn.easy_async(scrlocker .. " --nofork", function()
+                    awful.spawn.with_shell("hass-cli state turn_on " .. lamp_entity)
+                end)
+            else
+                awful.spawn(scrlocker)
+            end
+        end)
     end, { description = "lock screen", group = "hotkeys" }),
 
     -- Hotkeys
@@ -490,54 +505,41 @@ globalkeys = my_table.join(
         awful.spawn.easy_async("playerctl play-pause", function()
             awesome.emit_signal("media::update")
         end)
-    end, { description = "play/pause", group = "hotkeys" }),
+    end, { description = "play/pause", group = "media" }),
     awful.key({}, "XF86AudioPrev", function()
         awful.spawn.easy_async("playerctl previous", function()
             awesome.emit_signal("media::update")
         end)
-    end, { description = "prev", group = "hotkeys" }),
+    end, { description = "prev", group = "media" }),
     awful.key({}, "XF86AudioNext", function()
         awful.spawn.easy_async("playerctl next", function()
             awesome.emit_signal("media::update")
         end)
-    end, { description = "next", group = "hotkeys" }),
+    end, { description = "next", group = "media" }),
 
     awful.key({ modkey }, "KP_Begin", function()
-        awful.spawn.easy_async_with_shell("hass-cli state toggle " .. lamp_entity, function(stdout, stderr, exitreason, exitcode)
+        awful.spawn.easy_async_with_shell("hass-cli state toggle " .. lamp_entity, function()
             awesome.emit_signal("desklight::update")
         end)
     end, { description = "toggle desklamp", group = "hotkeys" }),
 
     awful.key({ modkey }, "KP_5", function()
-        awful.spawn.easy_async_with_shell("hass-cli state toggle light.desk_lamp", function(stdout, stderr, exitreason, exitcode)
+        awful.spawn.easy_async_with_shell("hass-cli state toggle " .. lamp_entity, function()
             awesome.emit_signal("desklight::update")
         end)
     end, { description = "toggle desklamp", group = "hotkeys" }),
-
-    -- ALSA volume control
-    awful.key({ altkey }, "Up", function()
-        awful.spawn.easy_async(string.format("amixer -q set %s 1%%+", beautiful.volume.channel), function()
-            awesome.emit_signal("volume::update")
-        end)
-    end, { description = "volume up", group = "hotkeys" }),
-
-    awful.key({ altkey }, "Down", function()
-        awful.spawn.easy_async(string.format("amixer -q set %s 1%%-", beautiful.volume.channel), function()
-            awesome.emit_signal("volume::update")
-        end)
-    end, { description = "volume down", group = "hotkeys" }),
 
     awful.key({}, "XF86AudioRaiseVolume", function()
         awful.spawn.easy_async(string.format("amixer -q set %s 1%%+", beautiful.volume.channel), function()
             awesome.emit_signal("volume::update")
         end)
-    end, { description = "volume up", group = "hotkeys" }),
+    end, { description = "volume up", group = "media" }),
 
     awful.key({}, "XF86AudioLowerVolume", function()
         awful.spawn.easy_async(string.format("amixer -q set %s 1%%-", beautiful.volume.channel), function()
             awesome.emit_signal("volume::update")
         end)
-    end, { description = "volume down", group = "hotkeys" }),
+    end, { description = "volume down", group = "media" }),
 
     awful.key({}, "XF86AudioMute", function()
         awful.spawn.easy_async(
@@ -546,20 +548,20 @@ globalkeys = my_table.join(
                 awesome.emit_signal("volume::update")
             end
         )
-    end, { description = "toggle mute", group = "hotkeys" }),
+    end, { description = "toggle mute", group = "media" }),
     awful.key({ modkey }, "c", function()
         awful.spawn("amixer sset Capture toggle")
-    end, { description = "toggle mute", group = "hotkeys" }),
+    end, { description = "toggle mute", group = "media" }),
 
     awful.key({ altkey, "Control" }, "m", function()
         awful.spawn(string.format("amixer -q set %s 100%%", beautiful.volume.channel))
         awesome.emit_signal("volume::update")
-    end, { description = "volume 100%", group = "hotkeys" }),
+    end, { description = "volume 100%", group = "media" }),
 
     awful.key({ altkey, "Control" }, "0", function()
         awful.spawn(string.format("amixer -q set %s 0%%", beautiful.volume.channel))
         beautiful.volume.update()
-    end, { description = "volume 0%", group = "hotkeys" }),
+    end, { description = "volume 0%", group = "media" }),
 
     -- Copy primary to clipboard (terminals to gtk)
     awful.key({ modkey }, "c", function()
