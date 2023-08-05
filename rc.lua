@@ -299,12 +299,7 @@ globalkeys = my_table.join(
     end, { description = "Take a screenshot with GUI", group = "hotkeys" }),
 
     -- X screen locker
-    awful.key({ altkey, "Control" }, "l", function()
-        awful.spawn.with_shell("hass-cli event fire kuro.lock --json '{}'")
-        awful.spawn.easy_async(scrlocker .. " --nofork", function()
-            awful.spawn.with_shell("hass-cli event fire kuro.unlock --json '{}'")
-        end)
-    end, { description = "lock screen", group = "hotkeys" }),
+    awful.key({ altkey, "Control" }, "l", function() awful.spawn(scrlocker) end, { description = "lock screen", group = "hotkeys" }),
 
     -- Hotkeys
     awful.key({ modkey }, "F1", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
