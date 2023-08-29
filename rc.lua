@@ -787,11 +787,11 @@ client.connect_signal("manage", function(c)
     -- i.e. put it at the end of others instead of setting it master.
     -- if not awesome.startup then awful.client.setslave(c) end
 
-    if not c.maximized and not c.fullscreen then
-        c.shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, beautiful.border_radius)
-        end
-    end
+    -- if not c.maximized and not c.fullscreen then
+    --     c.shape = function(cr, w, h)
+    --         gears.shape.rounded_rect(cr, w, h, beautiful.border_radius)
+    --     end
+    -- end
 
     if awesome.startup and not c.size_hints.user_position and not c.size_hints.program_position then
         -- Prevent clients from being unreachable after screen count changes.
@@ -799,25 +799,25 @@ client.connect_signal("manage", function(c)
     end
 end)
 
-client.connect_signal("property::fullscreen", function(c)
-    if not c.fullscreen then
-        c.shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, beautiful.border_radius)
-        end
-    else
-        c.shape = gears.shape.rectangle
-    end
-end)
-
-client.connect_signal("property::maximized", function(c)
-    if not c.maximized then
-        c.shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, beautiful.border_radius)
-        end
-    else
-        c.shape = gears.shape.rectangle
-    end
-end)
+-- client.connect_signal("property::fullscreen", function(c)
+--     if not c.fullscreen then
+--         c.shape = function(cr, w, h)
+--             gears.shape.rounded_rect(cr, w, h, beautiful.border_radius)
+--         end
+--     else
+--         c.shape = gears.shape.rectangle
+--     end
+-- end)
+--
+-- client.connect_signal("property::maximized", function(c)
+--     if not c.maximized then
+--         c.shape = function(cr, w, h)
+--             gears.shape.rounded_rect(cr, w, h, beautiful.border_radius)
+--         end
+--     else
+--         c.shape = gears.shape.rectangle
+--     end
+-- end)
 
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)

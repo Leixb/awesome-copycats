@@ -36,7 +36,7 @@ theme.border_normal = theme.bg_normal
 theme.border_focus = theme.fg_normal
 theme.border_marked = xrdb.color5 or "#CC9393"
 theme.notification_icon_size = dpi(128)
-theme.border_radius = dpi(10)
+-- theme.border_radius = dpi(10)
 theme.fg_warning = xrdb.color3 or "#E3D18A"
 
 theme.hotkeys_bg = theme.bg_normal
@@ -122,9 +122,9 @@ theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar/
 nconf.defaults.border_width = 0
 nconf.defaults.border_color = theme.border_focus
 nconf.defaults.margin = dpi(16)
-nconf.defaults.shape = function(cr, width, height)
-    gears.shape.rounded_rect(cr, width, height, theme.border_radius)
-end
+-- nconf.defaults.shape = function(cr, width, height)
+--     gears.shape.rounded_rect(cr, width, height, theme.border_radius)
+-- end
 nconf.defaults.timeout = 5
 nconf.padding = dpi(16)
 nconf.presets.critical.bg = theme.bg_urgent
