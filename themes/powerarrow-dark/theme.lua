@@ -29,6 +29,7 @@ theme.bg_focus = xrdb.color0 or "#213646"
 theme.bg_widget = theme.bg_normal
 theme.bg_widget_alt = theme.bg_focus
 theme.bg_systray = theme.bg_widget
+theme.systray_icon_spacing = dpi(4)
 theme.bg_urgent = xrdb.color9 or "#EA7A7A"
 theme.border_width = dpi(2)
 theme.border_normal = theme.bg_normal
@@ -350,18 +351,18 @@ local function build_bar(widgets, layout)
     local bar = { layout = layout }
 
     local colors = { theme.bg_widget_alt, theme.bg_widget }
-    local arr = spr
+    -- local arr = spr
     -- local arr = separators.arrow_left("alpha", colors[2])
 
     for i, widget_list in ipairs(widgets) do
-        table.insert(bar, arr)
+        -- table.insert(bar, arr)
         if widget_list[1] == nil then
             widget_list = { widget_list }
         end
         for _, widget in ipairs(widget_list) do
             table.insert(bar, wibox.container.background(widget, colors[(i % 2) + 1]))
         end
-        arr = spr
+        -- arr = spr
         -- arr = separators.arrow_left(colors[(i % 2) + 1], colors[((i + 1) % 2) + 1])
     end
 
@@ -416,9 +417,8 @@ function theme.at_screen_connect(s)
             spacing_widget = {
                 {
                     forced_width = 5,
-                    forced_height = 24,
                     thickness = 1,
-                    color = "#777777",
+                    color = theme.bg_focus,
                     widget = wibox.widget.separator,
                 },
                 valign = "center",
@@ -465,7 +465,6 @@ function theme.at_screen_connect(s)
             --spr,
             s.mytaglist,
             s.mypromptbox,
-            wibox.container.background(spr, theme.bg_widget),
         },
         {
             -- Middle widget
@@ -474,15 +473,22 @@ function theme.at_screen_connect(s)
             arrd,
         },
         build_bar({ -- Right widgets
-            { spr, wibox.widget.systray(), theme.dnd, spr },
+            {
+                wibox.widget.systray(),
+                theme.dnd,
+            },
             theme.volume.widget,
             mem.widget,
             cpu.widget,
             temp.widget,
             { baticon, bat.widget },
-            { spr, weather.icon, weather.widget },
-            clock,
-            { spr, wibox.container.margin(s.mylayoutbox, dpi(4), dpi(4), dpi(4), dpi(4)) },
+            {
+                spr,
+                weather.icon,
+                weather.widget,
+            },
+            { spr, clock, spr },
+            { wibox.container.margin(s.mylayoutbox, dpi(4), dpi(4), dpi(4), dpi(4)) },
         }),
     })
 end
