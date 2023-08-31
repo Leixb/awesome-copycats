@@ -4,7 +4,6 @@ Powerarrow Dark Awesome WM theme
 github.com/lcpz
 
 --]]
-
 local gears = require("gears")
 local lain = require("lain")
 local awful = require("awful")
@@ -339,7 +338,8 @@ theme.volume.widget:buttons(awful.util.table.join(
 
 -- Separators
 local spr = wibox.widget.textbox(" ")
-local arrd = separators.arrow_right(theme.bg_widget_alt, "alpha")
+-- local arrd = separators.arrow_right(theme.bg_widget_alt, "alpha")
+local arrd = spr
 
 local function build_bar(widgets, layout)
     if layout == nil then
@@ -348,7 +348,8 @@ local function build_bar(widgets, layout)
     local bar = { layout = layout }
 
     local colors = { theme.bg_widget_alt, theme.bg_widget }
-    local arr = separators.arrow_left("alpha", colors[2])
+    local arr = spr
+    -- local arr = separators.arrow_left("alpha", colors[2])
 
     for i, widget_list in ipairs(widgets) do
         table.insert(bar, arr)
@@ -358,7 +359,8 @@ local function build_bar(widgets, layout)
         for _, widget in ipairs(widget_list) do
             table.insert(bar, wibox.container.background(widget, colors[(i % 2) + 1]))
         end
-        arr = separators.arrow_left(colors[(i % 2) + 1], colors[((i + 1) % 2) + 1])
+        arr = spr
+        -- arr = separators.arrow_left(colors[(i % 2) + 1], colors[((i + 1) % 2) + 1])
     end
 
     return bar
@@ -455,7 +457,8 @@ function theme.at_screen_connect(s)
     -- Add widgets to the wibox
     s.mywibox:setup({
         layout = wibox.layout.align.horizontal,
-        { -- Left widgets
+        {
+            -- Left widgets
             layout = wibox.layout.fixed.horizontal,
             --spr,
             s.mytaglist,
