@@ -66,21 +66,21 @@ theme.menu_width = dpi(140)
 theme.menu_submenu_icon = theme.dir .. "/icons/submenu.png"
 theme.taglist_squares_sel = theme.dir .. "/icons/square_sel.png"
 theme.taglist_squares_unsel = theme.dir .. "/icons/square_unsel.png"
-theme.layout_tile = theme.dir .. "/icons/tile.png"
-theme.layout_tileleft = theme.dir .. "/icons/tileleft.png"
-theme.layout_tilebottom = theme.dir .. "/icons/tilebottom.png"
-theme.layout_tiletop = theme.dir .. "/icons/tiletop.png"
-theme.layout_fairv = theme.dir .. "/icons/fairv.png"
-theme.layout_fairh = theme.dir .. "/icons/fairh.png"
-theme.layout_spiral = theme.dir .. "/icons/spiral.png"
-theme.layout_dwindle = theme.dir .. "/icons/dwindle.png"
-theme.layout_max = theme.dir .. "/icons/max.png"
+theme.layout_tile = gears.color.recolor_image(theme.dir .. "/icons/tile.svg", theme.fg_normal)
+theme.layout_tileleft = gears.color.recolor_image(theme.dir .. "/icons/tileleft.svg", theme.fg_normal)
+theme.layout_tilebottom = gears.color.recolor_image(theme.dir .. "/icons/tilebottom.svg", theme.fg_normal)
+theme.layout_tiletop = gears.color.recolor_image(theme.dir .. "/icons/tiletop.svg", theme.fg_normal)
+theme.layout_fairv = gears.color.recolor_image(theme.dir .. "/icons/fairv.svg", theme.fg_normal)
+theme.layout_fairh = gears.color.recolor_image(theme.dir .. "/icons/fairh.svg", theme.fg_normal)
+theme.layout_spiral = gears.color.recolor_image(theme.dir .. "/icons/spiral.svg", theme.fg_normal)
+theme.layout_dwindle = gears.color.recolor_image(theme.dir .. "/icons/dwindle.svg", theme.fg_normal)
+theme.layout_max = gears.color.recolor_image(theme.dir .. "/icons/max.svg", theme.fg_normal)
 theme.layout_fullscreen = theme.dir .. "/icons/fullscreen.png"
 theme.layout_magnifier = theme.dir .. "/icons/magnifier.png"
-theme.layout_floating = theme.dir .. "/icons/floating.png"
-theme.layout_centerwork = theme.dir .. "/icons/centerwork.png"
-theme.layout_termfair = theme.dir .. "/icons/termfair.png"
-theme.layout_centerfair = theme.dir .. "/icons/centerfair.png"
+theme.layout_floating = gears.color.recolor_image(theme.dir .. "/icons/floating.svg", theme.fg_normal)
+theme.layout_centerwork = gears.color.recolor_image(theme.dir .. "/icons/centerwork.svg", theme.fg_normal)
+theme.layout_termfair = gears.color.recolor_image(theme.dir .. "/icons/termfair.svg", theme.fg_normal)
+theme.layout_centerfair = gears.color.recolor_image(theme.dir .. "/icons/centerfair.svg", theme.fg_normal)
 theme.widget_ac = theme.dir .. "/icons/ac.png"
 theme.widget_battery = theme.dir .. "/icons/battery.png"
 theme.widget_battery_low = theme.dir .. "/icons/battery_low.png"
@@ -482,7 +482,7 @@ function theme.at_screen_connect(s)
             { baticon, bat.widget },
             { spr, weather.icon, weather.widget },
             clock,
-            { spr, s.mylayoutbox },
+            { spr, wibox.container.margin(s.mylayoutbox, dpi(4), dpi(4), dpi(4), dpi(4)) },
         }),
     })
 end
