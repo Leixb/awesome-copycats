@@ -8,6 +8,9 @@
 local awesome, client, mouse, screen, tag = awesome, client, mouse, screen, tag
 local ipairs, string, os, table, tostring, tonumber, type = ipairs, string, os, table, tostring, tonumber, type
 
+-- load awful remote for awesome-client
+require("awful.remote")
+
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
