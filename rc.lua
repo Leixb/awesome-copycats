@@ -244,10 +244,9 @@ local myawesomemenu = {
 --awful.util.mymainmenu.wibox:connect_signal("mouse::leave", function() awful.util.mymainmenu:hide() end)
 
 -- Update volume widget on volume change
-awesome.connect_signal(
-    "volume::update",
-    function() beautiful.volume.update() end
-)
+awesome.connect_signal("volume::update", function()
+    beautiful.volume.update()
+end)
 
 --menubar.utils.terminal = terminal -- Set the Menubar terminal for applications that require it
 -- }}}
@@ -284,9 +283,8 @@ awful.screen.connect_for_each_screen(function(s)
 end)
 -- }}}
 
--- {{{ Mouse bindings
-root.buttons(my_table.join(awful.button({}, 4, awful.tag.viewnext), awful.button({}, 5, awful.tag.viewprev)))
--- }}}
+-- Mouse bindings
+-- root.buttons(my_table.join(awful.button({}, 4, awful.tag.viewnext), awful.button({}, 5, awful.tag.viewprev)))
 
 -- {{{ Key bindings
 globalkeys = my_table.join(
@@ -299,7 +297,9 @@ globalkeys = my_table.join(
     end, { description = "Take a screenshot with GUI", group = "hotkeys" }),
 
     -- X screen locker
-    awful.key({ altkey, "Control" }, "l", function() awful.spawn(scrlocker) end, { description = "lock screen", group = "hotkeys" }),
+    awful.key({ altkey, "Control" }, "l", function()
+        awful.spawn(scrlocker)
+    end, { description = "lock screen", group = "hotkeys" }),
 
     -- Hotkeys
     awful.key({ modkey }, "F1", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
@@ -935,4 +935,6 @@ mouse.coords({
 
 -- possible workaround for tag preservation when switching back to default screen:
 -- https://github.com/lcpz/awesome-copycats/issues/251
+-- }}}
+-- }}}
 -- }}}
